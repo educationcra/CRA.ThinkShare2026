@@ -3,432 +3,432 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>แบบสอบถามความพึงพอใจ - CRA Think Share 2026</title>
+  <title>แบบประเมินความพึงพอใจ - CRA Think Share 2026</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css" rel="stylesheet">
   
   <style>
-    body { font-family: 'Noto Sans Thai', sans-serif; background-color: #f8fafc; }
-    .input-field { 
-        width: 100%; padding: 1.125rem 1.25rem; border-radius: 0.85rem; 
-        border: 2px solid #e2e8f0; background: #ffffff; outline: none; 
-        transition: all 0.25s ease; font-weight: 600; color: #0f172a; 
-    }
-    .input-field:focus { border-color: #0f172a; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06); }
-    .input-label { display: block; font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
+    body { font-family: 'Noto Sans Thai', sans-serif; background-color: #f1f5f9; }
     
-    /* สไตล์ปุ่มประเมินคะแนน 1-5 */
-    .rating-btn {
-      width: 46px; height: 46px; border-radius: 50%; border: 2px solid #cbd5e1;
-      font-weight: 800; color: #475569; display: flex; align-items: center;
-      justify-content: center; transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-      cursor: pointer; background: #ffffff; user-select: none;
+    .form-container {
+      background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border-top: 8px solid #0f172a; padding: 2rem; margin-bottom: 2rem;
     }
-    .rating-btn:hover { border-color: #ff6b00; color: #ff6b00; transform: scale(1.08); }
-    .rating-radio:checked + .rating-btn {
-      background: #0f172a; border-color: #0f172a; color: #ffffff; transform: scale(1.12);
-      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+    .question-box {
+      background: #ffffff; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1rem; transition: border-color 0.3s;
     }
+    .question-box.has-error { border-color: #ef4444; background-color: #fef2f2; }
     
-    /* สไตล์ Radio ตัวเลือกปกติ */
-    .custom-radio {
-      display: flex; align-items: center; gap: 0.75rem; cursor: pointer;
-      padding: 1rem 1.25rem; border-radius: 0.85rem; background: #ffffff;
-      border: 2px solid #e2e8f0; transition: all 0.2s; font-weight: 600; color: #334155;
+    .input-field {
+      width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1;
+      font-size: 1rem; transition: all 0.2s; outline: none;
     }
-    .custom-radio input { appearance: none; width: 1.2rem; height: 1.2rem; border: 2px solid #cbd5e1; border-radius: 50%; outline: none; position: relative; background: #fff; cursor: pointer; }
-    .custom-radio input:checked { border-color: #0f172a; }
-    .custom-radio input:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0.6rem; height: 0.6rem; border-radius: 50%; background: #0f172a; }
-    .custom-radio input:checked ~ span { color: #0f172a; }
-    .custom-radio:hover, input:checked + .custom-radio-box { border-color: #0f172a; background: #f8fafc; }
+    .input-field:focus { border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1); }
+    
+    /* Radio Buttons เรียบหรู */
+    .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 0; }
+    .radio-label input { width: 1.2rem; height: 1.2rem; accent-color: #0f172a; cursor: pointer; }
+    
+    /* Likert Scale (1-5) */
+    .likert-scale { display: flex; gap: 8px; width: 100%; max-width: 400px; margin-top: 12px; }
+    .likert-scale label { flex: 1; text-align: center; cursor: pointer; }
+    .likert-scale input { display: none; }
+    .likert-scale span {
+      display: block; padding: 12px 0; background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 8px; font-weight: bold; color: #64748b; transition: all 0.2s;
+    }
+    .likert-scale input:checked + span { background: #0f172a; border-color: #0f172a; color: white; transform: scale(1.05); }
 
-    .error-text { color: #ef4444; font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem; display: none; }
-    .question-block { padding: 1.5rem; border-radius: 1.25rem; background: #ffffff; border: 2px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); transition: all 0.2s; }
-    .question-block.has-error { border-color: #ef4444; background: #fff1f2; }
+    .error-msg { color: #ef4444; font-size: 0.85rem; font-weight: bold; margin-top: 8px; display: none; }
+    .question-box.has-error .error-msg { display: block; }
   </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col items-center p-4 md:p-10">
+<body class="text-slate-800 pb-10">
 
-  <div class="fixed top-0 left-0 w-full h-2 bg-gradient-to-r from-[#0a2240] via-[#0ea5e9] to-[#ff6b00] z-50"></div>
+  <!-- Header โลโก้ -->
+  <div class="w-full bg-white border-b border-slate-200 py-4 px-6 flex justify-center sticky top-0 z-50 shadow-sm">
+    <img src="https://s.imgz.io/2026/04/08/image-119644b2a1df1904f.png" alt="CRA Logo" class="h-10">
+  </div>
 
-  <div class="w-full max-w-2xl mt-4">
-    
-    <div class="flex justify-between items-center mb-8">
-       <a href="index.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-[#0f172a] font-bold transition-colors no-underline">
-         <i class="fi fi-sr-arrow-small-left mt-0.5 text-xl"></i> กลับหน้าหลัก
-       </a>
-       <img src="https://s.imgz.io/2026/04/08/image-119644b2a1df1904f.png" alt="CRA Logo" class="h-8 sm:h-10">
-    </div>
+  <div class="max-w-3xl mx-auto px-4 pt-8">
 
-    <div id="surveyContainer">
-       <h1 class="text-3xl font-black text-[#0f172a] tracking-tight mb-2">แบบสอบถามความพึงพอใจ</h1>
-       <p class="text-slate-500 font-medium mb-8">ความคิดเห็นของท่านเป็นประโยชน์อย่างยิ่งในการพัฒนาปรับปรุงกิจกรรมในอนาคต</p>
+    <div id="formSection">
+      <!-- หัวข้อฟอร์ม -->
+      <div class="form-container text-center">
+        <h1 class="text-2xl sm:text-3xl font-black text-[#0f172a] mb-2">แบบสอบถามความพึงพอใจ</h1>
+        <p class="text-slate-500 font-medium text-sm sm:text-base">โครงการ CRA Think Share Innovations & Inventions Forum 2026</p>
+      </div>
 
-       <form id="satisfactionForm" class="space-y-6" novalidate>
-         
-         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5" id="sec_verification">
-            <h3 class="text-lg font-bold text-[#0f172a] border-b pb-2"><i class="fi fi-sr-id-badge mr-1"></i> ส่วนที่ 1: ข้อมูลยืนยันตน</h3>
+      <form id="satisfactionForm" novalidate>
+        
+        <!-- ข้อมูลผู้ทำแบบประเมิน -->
+        <div class="question-box" id="q_role">
+          <p class="font-bold mb-3">1. ประเภทผู้ทำแบบประเมิน <span class="text-red-500">*</span></p>
+          <div class="space-y-1">
+            <label class="radio-label"><input type="radio" name="role" value="ผู้เข้าร่วม"> <span class="font-medium">ผู้เข้าร่วมกิจกรรม (นักเรียน)</span></label>
+            <label class="radio-label"><input type="radio" name="role" value="วิทยากร"> <span class="font-medium">วิทยากร / คณะทำงาน</span></label>
+            <label class="radio-label"><input type="radio" name="role" value="ทั่วไป"> <span class="font-medium">บุคคลทั่วไป / ผู้ติดตาม</span></label>
+          </div>
+          <div class="error-msg">กรุณาเลือกประเภทผู้ทำแบบประเมิน</div>
+        </div>
+
+        <!-- โซนผู้เข้าร่วม (เช็ครหัส) -->
+        <div id="participantZone" class="hidden">
+          <div class="question-box" id="q_tsCode">
+            <p class="font-bold mb-2">รหัสประจำตัว (TS-XXX) <span class="text-red-500">*</span></p>
+            <p class="text-xs text-slate-500 mb-3">พิมพ์เฉพาะตัวเลข 3 หลัก</p>
+            <input type="text" inputmode="numeric" id="tsCode" maxlength="3" class="input-field max-w-[200px] text-center tracking-widest text-lg font-bold" placeholder="000" oninput="checkTS(this)">
+            <div class="error-msg">กรุณากรอกรหัสประจำตัวให้ถูกต้อง และรอยืนยันชื่อ</div>
             
-            <div id="q_role">
-               <label class="input-label">ประเภทผู้ทำแบบสอบถาม <span class="text-red-500">*</span></label>
-               <div class="grid grid-cols-3 gap-3">
-                  <label class="custom-radio"><input type="radio" name="role" value="ผู้เข้าร่วม"><span>ผู้เข้าร่วม</span></label>
-                  <label class="custom-radio"><input type="radio" name="role" value="วิทยากร"><span>วิทยากร</span></label>
-                  <label class="custom-radio"><input type="radio" name="role" value="ทั่วไป"><span>ทั่วไป</span></label>
-               </div>
-               <div class="error-text">กรุณาเลือกประเภทผู้ทำแบบสอบถาม</div>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4 pt-2">
-               <div class="col-span-4" id="q_tsCode">
-                   <label class="input-label">รหัส TS (3 หลัก)</label>
-                   <input type="text" inputmode="numeric" id="tsCode" maxlength="3" class="input-field text-center text-xl font-bold tracking-[0.2em]" placeholder="000" oninput="checkTS(this)">
-                   <div class="error-text">กรุณากรอกรหัส 3 หลักให้ถูกต้อง</div>
-               </div>
-               <div class="col-span-8">
-                   <label class="input-label">ชื่อ-นามสกุล ของท่าน</label>
-                   <input type="text" id="fullName" class="input-field bg-slate-50 text-slate-400" placeholder="ระบบจะดึงข้อมูลอัตโนมัติ..." readonly>
-               </div>
-            </div>
-
-            <div id="verifyBox" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-4 text-center space-y-3">
-               <p class="font-bold text-slate-800">ชื่อ-นามสกุล ของคุณคือ <span id="verifyName" class="text-orange-600 text-lg"></span> ใช่หรือไม่?</p>
-               <div class="flex justify-center gap-3">
-                  <button type="button" onclick="confirmIdentity(true)" class="bg-[#0f172a] text-white px-5 py-2 rounded-lg font-bold shadow-md hover:bg-slate-800 transition">ใช่, ถูกต้อง</button>
-                  <button type="button" onclick="confirmIdentity(false)" class="bg-white border border-slate-300 text-slate-600 px-4 py-2 rounded-lg font-bold hover:bg-slate-50 transition">ไม่ใช่ (กรอกใหม่)</button>
-               </div>
-            </div>
-         </div>
-
-         <div id="surveySections" class="opacity-40 pointer-events-none space-y-5 transition-all duration-300">
-            <h3 class="text-lg font-bold text-[#0f172a] pt-4"><i class="fi fi-sr-ballot mr-1"></i> ส่วนที่ 2: ความพึงพอใจต่อกิจกรรม</h3>
-            <p class="text-sm font-bold text-slate-400 bg-slate-100 p-2.5 rounded-lg">เกณฑ์คะแนนประเมิน: 5 = มากที่สุด | 4 = มาก | 3 = กลาง | 2 = น้อย | 1 = น้อยที่สุด</p>
-
-            <div class="question-block" id="q_D">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">1. นิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์ <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreD" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreD" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreD" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreD" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreD" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
+            <!-- แสดงผลดึงชื่ออัตโนมัติ -->
+            <div id="autoNameDisplay" class="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-lg hidden">
+              <p class="text-sm text-slate-500 mb-1">ชื่อ-นามสกุลในระบบ:</p>
+              <p id="fetchedName" class="font-bold text-[#0f172a]"></p>
+              
+              <div class="mt-3 pt-3 border-t border-slate-200" id="confirmBox">
+                <p class="text-sm font-bold text-orange-600 mb-2">ข้อมูลนี้ถูกต้องใช่หรือไม่?</p>
+                <div class="flex gap-2">
+                  <button type="button" onclick="confirmName(true)" class="px-4 py-1.5 bg-[#0f172a] text-white text-sm font-bold rounded-md hover:bg-slate-800">ใช่, ถูกต้อง</button>
+                  <button type="button" onclick="confirmName(false)" class="px-4 py-1.5 bg-white border border-slate-300 text-slate-600 text-sm font-bold rounded-md hover:bg-slate-50">ไม่ใช่ (พิมพ์ใหม่)</button>
+                </div>
               </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+              <div id="confirmedMsg" class="mt-2 text-sm font-bold text-emerald-600 hidden"><i class="fi fi-sr-check"></i> ยืนยันข้อมูลถูกต้องแล้ว</div>
             </div>
+          </div>
+        </div>
 
-            <div class="question-block" id="q_E">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">2. กิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreE" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreE" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreE" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreE" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreE" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
-            </div>
+        <!-- โซนวิทยากร/ทั่วไป (พิมพ์ชื่อเอง) หรือ ผู้เข้าร่วมที่กดว่าข้อมูลไม่ถูก -->
+        <div id="manualNameZone" class="hidden">
+          <div class="question-box" id="q_manualName">
+            <p class="font-bold mb-2">ชื่อ-นามสกุล ของท่าน <span class="text-red-500">*</span></p>
+            <input type="text" id="manualName" class="input-field" placeholder="กรอกชื่อ-นามสกุล...">
+            <div class="error-msg">กรุณากรอกชื่อ-นามสกุล</div>
+          </div>
+        </div>
 
-            <div class="question-block" id="q_F">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">3. กิจกรรมปาฐกถาพิเศษ หัวข้อ "การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี" <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreF" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreF" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreF" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreF" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreF" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
-            </div>
+        <!-- โซนคำถาม (ถูกซ่อนตอนแรก และจะเปิดเมื่อกรอกชื่อเสร็จ) -->
+        <div id="surveyQuestions" class="opacity-30 pointer-events-none transition-all duration-300 mt-6">
+          
+          <div class="mb-4 px-2">
+            <h2 class="text-xl font-bold text-[#0f172a]">ความพึงพอใจต่อการจัดกิจกรรม</h2>
+            <p class="text-sm font-medium text-slate-500">ระดับคะแนน 5 = มากที่สุด, 1 = น้อยที่สุด</p>
+          </div>
 
-            <div class="question-block" id="q_G">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">4. กิจกรรมบรรยายพิเศษ หัวข้อ "AICEDA: ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก" <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreG" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreG" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreG" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreG" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreG" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+          <!-- ข้อ 1 -->
+          <div class="question-box" id="q_scoreD">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">นิทรรศการผลงานนวัตกรรมและสิ่งประดิษฐ์ <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreD" value="1"><span>1</span></label>
+               <label><input type="radio" name="scoreD" value="2"><span>2</span></label>
+               <label><input type="radio" name="scoreD" value="3"><span>3</span></label>
+               <label><input type="radio" name="scoreD" value="4"><span>4</span></label>
+               <label><input type="radio" name="scoreD" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_H">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">5. กิจกรรมบรรยายพิเศษ หัวข้อ "Pitching Idea 101: ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้)" <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreH" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreH" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreH" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreH" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreH" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+          <div class="question-box" id="q_scoreE">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">บรรยายพิเศษ: บทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านนวัตกรรมเชิงสุขภาพ <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreE" value="1"><span>1</span></label><label><input type="radio" name="scoreE" value="2"><span>2</span></label><label><input type="radio" name="scoreE" value="3"><span>3</span></label><label><input type="radio" name="scoreE" value="4"><span>4</span></label><label><input type="radio" name="scoreE" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_I">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">6. กิจกรรมบรรยายพิเศษ หัวข้อ "AI & Me: คู่หูสร้างสรรค์ผลงานยุคดิจิทัล" <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreI" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreI" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreI" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreI" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreI" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+          <div class="question-box" id="q_scoreF">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">ปาฐกถาพิเศษ: การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreF" value="1"><span>1</span></label><label><input type="radio" name="scoreF" value="2"><span>2</span></label><label><input type="radio" name="scoreF" value="3"><span>3</span></label><label><input type="radio" name="scoreF" value="4"><span>4</span></label><label><input type="radio" name="scoreF" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_J">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">7. กิจกรรมบรรยายพิเศษ หัวข้อ "We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR" <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreJ" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreJ" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreJ" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreJ" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreJ" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+          <div class="question-box" id="q_scoreG">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">บรรยายพิเศษ: AICEDA ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreG" value="1"><span>1</span></label><label><input type="radio" name="scoreG" value="2"><span>2</span></label><label><input type="radio" name="scoreG" value="3"><span>3</span></label><label><input type="radio" name="scoreG" value="4"><span>4</span></label><label><input type="radio" name="scoreG" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_K">
-              <p class="font-bold text-slate-800 leading-relaxed mb-3">8. กิจกรรม Workshop : We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreK" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreK" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreK" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreK" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreK" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนความพึงพอใจในข้อนี้</div>
+          <div class="question-box" id="q_scoreH">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">บรรยายพิเศษ: Pitching Idea 101 ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้) <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreH" value="1"><span>1</span></label><label><input type="radio" name="scoreH" value="2"><span>2</span></label><label><input type="radio" name="scoreH" value="3"><span>3</span></label><label><input type="radio" name="scoreH" value="4"><span>4</span></label><label><input type="radio" name="scoreH" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_L">
-              <p class="font-bold text-slate-800 text-[1.05rem] leading-relaxed mb-3 text-sky-700">9. ให้คะแนนภาพรวมของกิจกรรมทั้งหมดภายใต้โครงการนี้ <span class="text-red-500">*</span></p>
-              <div class="flex gap-4 items-center justify-between max-w-sm mt-2" data-type="rating">
-                 <label><input type="radio" name="scoreL" value="1" class="rating-radio hidden"><span class="rating-btn">1</span></label>
-                 <label><input type="radio" name="scoreL" value="2" class="rating-radio hidden"><span class="rating-btn">2</span></label>
-                 <label><input type="radio" name="scoreL" value="3" class="rating-radio hidden"><span class="rating-btn">3</span></label>
-                 <label><input type="radio" name="scoreL" value="4" class="rating-radio hidden"><span class="rating-btn">4</span></label>
-                 <label><input type="radio" name="scoreL" value="5" class="rating-radio hidden"><span class="rating-btn">5</span></label>
-              </div>
-              <div class="error-text">กรุณาเลือกคะแนนภาพรวมกิจกรรม</div>
+          <div class="question-box" id="q_scoreI">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">บรรยายพิเศษ: AI & Me คู่หูสร้างสรรค์ผลงานยุคดิจิทัล <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreI" value="1"><span>1</span></label><label><input type="radio" name="scoreI" value="2"><span>2</span></label><label><input type="radio" name="scoreI" value="3"><span>3</span></label><label><input type="radio" name="scoreI" value="4"><span>4</span></label><label><input type="radio" name="scoreI" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block" id="q_future">
-               <label class="input-label">หากมีกิจกรรมของทางราชวิทยาลัยจุฬาภรณ์รูปแบบนี้อีกในอนาคต ท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></label>
-               <div class="space-y-2 mt-3">
-                  <label class="custom-radio"><input type="radio" name="futureInterest" value="สนใจเข้าร่วมแน่นอน"><span>สนใจเข้าร่วมแน่นอน</span></label>
-                  <label class="custom-radio"><input type="radio" name="futureInterest" value="ไม่สนใจเข้าร่วม"><span>ไม่สนใจเข้าร่วม</span></label>
-                  <label class="custom-radio"><input type="radio" name="futureInterest" value="ยังไม่แน่ใจ / ดูความพร้อมอีกครั้ง"><span>ยังไม่แน่ใจ / ดูความพร้อมอีกครั้ง</span></label>
-               </div>
-               <div class="error-text">กรุณาเลือกความสนใจของท่าน</div>
+          <div class="question-box" id="q_scoreJ">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">บรรยายพิเศษ: We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreJ" value="1"><span>1</span></label><label><input type="radio" name="scoreJ" value="2"><span>2</span></label><label><input type="radio" name="scoreJ" value="3"><span>3</span></label><label><input type="radio" name="scoreJ" value="4"><span>4</span></label><label><input type="radio" name="scoreJ" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="question-block">
-               <label class="input-label">ข้อเสนอแนะอื่น ๆ เพิ่มเติม</label>
-               <textarea id="suggestions" rows="4" class="input-field" placeholder="พิมพ์แบ่งปันความคิดเห็นหรือสิ่งที่อยากให้ทีมงานเพิ่มเติมในครั้งต่อไป..."></textarea>
+          <div class="question-box" id="q_scoreK">
+            <p class="font-bold text-slate-800 mb-2 leading-relaxed">กิจกรรม Workshop: We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreK" value="1"><span>1</span></label><label><input type="radio" name="scoreK" value="2"><span>2</span></label><label><input type="radio" name="scoreK" value="3"><span>3</span></label><label><input type="radio" name="scoreK" value="4"><span>4</span></label><label><input type="radio" name="scoreK" value="5"><span>5</span></label>
             </div>
+            <div class="error-msg">กรุณาให้คะแนนข้อนี้</div>
+          </div>
 
-            <div class="pt-6">
-               <button type="button" id="submitBtn" onclick="submitSurveyData()" class="w-full btn-dark py-4 rounded-[1rem] font-bold text-[17px] flex items-center justify-center gap-2">
-                  ส่งแบบสอบถามความพึงพอใจ <i class="fi fi-sr-paper-plane mt-0.5"></i>
-               </button>
+          <div class="question-box border-l-4 border-l-[#0f172a]" id="q_scoreL">
+            <p class="font-bold text-slate-800 text-lg mb-2">ให้คะแนนภาพรวมของกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
+            <div class="likert-scale">
+               <label><input type="radio" name="scoreL" value="1"><span>1</span></label><label><input type="radio" name="scoreL" value="2"><span>2</span></label><label><input type="radio" name="scoreL" value="3"><span>3</span></label><label><input type="radio" name="scoreL" value="4"><span>4</span></label><label><input type="radio" name="scoreL" value="5"><span>5</span></label>
             </div>
-         </div>
-       </form>
+            <div class="error-msg">กรุณาให้คะแนนภาพรวม</div>
+          </div>
+
+          <div class="question-box" id="q_future">
+            <p class="font-bold mb-3">หากมีกิจกรรมของทางราชวิทยาลัยจุฬาภรณ์รูปแบบนี้อีกในอนาคต ท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></p>
+            <div class="space-y-1">
+              <label class="radio-label"><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน"> <span class="font-medium">สนใจเข้าร่วมแน่นอน</span></label>
+              <label class="radio-label"><input type="radio" name="future" value="ไม่สนใจเข้าร่วม"> <span class="font-medium">ไม่สนใจเข้าร่วม</span></label>
+              <label class="radio-label"><input type="radio" name="future" value="ยังไม่แน่ใจ"> <span class="font-medium">ยังไม่แน่ใจ / ดูความพร้อมอีกครั้ง</span></label>
+            </div>
+            <div class="error-msg">กรุณาเลือกคำตอบ</div>
+          </div>
+
+          <div class="question-box">
+            <p class="font-bold mb-2">ข้อเสนอแนะอื่น ๆ เพื่อการพัฒนา</p>
+            <textarea id="suggestions" rows="3" class="input-field" placeholder="คำติชม หรือสิ่งที่อยากให้เพิ่มเติม..."></textarea>
+          </div>
+
+          <button type="button" id="submitBtn" onclick="submitSurvey()" class="w-full bg-[#0f172a] text-white py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition shadow-lg mt-4">
+             ส่งแบบประเมิน <i class="fi fi-sr-paper-plane ml-1"></i>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <div id="successView" class="hidden text-center py-12 animate-fade-in">
-       <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <i class="fi fi-sr-check-circle text-5xl text-emerald-500 mt-2"></i>
+    <!-- หน้าจอสำเร็จ โชว์เกียรติบัตร -->
+    <div id="successSection" class="hidden text-center py-10">
+       <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="fi fi-sr-check text-4xl text-emerald-600 mt-1"></i>
        </div>
-       <h2 class="text-3xl font-black text-[#0f172a] mb-2 tracking-tight">ขอบคุณสำหรับความเห็น!</h2>
-       <p class="text-slate-500 mb-8 font-medium text-[16px]">ระบบบันทึกแบบประเมินความพึงพอใจเรียบร้อยแล้ว</p>
+       <h2 class="text-3xl font-black text-[#0f172a] mb-2">ขอบคุณที่ร่วมประเมิน</h2>
+       <p class="text-slate-500 mb-10">ระบบบันทึกความคิดเห็นของท่านเรียบร้อยแล้ว</p>
        
-       <div class="max-w-xs mx-auto mb-10">
-          <a href="https://educationcra.github.io/CRA.ThinkShare2026/certificate-mockup.pdf" target="_blank" class="block group no-underline">
-             <div class="bg-gradient-to-br from-amber-400 via-orange-400 to-red-500 p-6 rounded-[2rem] text-white shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl flex flex-col items-center justify-center gap-4 border border-white/20">
-                
-                <svg class="w-24 h-24 text-white drop-shadow-md animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="animation-duration: 3s;">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path>
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m-5-2v-4m10 4v-4"></path>
-                </svg>
-                
-                <div>
-                   <p class="text-[15px] font-black tracking-wide">คลิกเพื่อรับเกียรติบัตร</p>
-                   <p class="text-white/80 text-[11px] font-medium mt-0.5">E-Certificate Electronic</p>
-                </div>
-             </div>
-          </a>
-       </div>
-
-       <a href="index.html" class="inline-flex w-full max-w-sm justify-center items-center gap-2 bg-slate-100 text-slate-700 py-4 rounded-xl font-bold hover:bg-slate-200 transition no-underline text-[17px]">
-          กลับหน้าหลัก
+       <!-- การ์ดดาวน์โหลดเกียรติบัตร -->
+       <a href="certificate-mockup.pdf" target="_blank" class="block max-w-sm mx-auto group no-underline">
+          <div class="bg-gradient-to-br from-[#0f172a] to-slate-800 p-8 rounded-2xl text-white shadow-xl hover:-translate-y-2 transition duration-300">
+             <svg class="w-20 h-20 mx-auto text-amber-400 mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m-5-2v-4m10 4v-4"></path>
+             </svg>
+             <h3 class="text-lg font-bold text-white mb-1">ดาวน์โหลดเกียรติบัตร</h3>
+             <p class="text-slate-400 text-sm">คลิกเพื่อรับ E-Certificate ของท่าน</p>
+          </div>
        </a>
     </div>
 
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb95U9rbflq0JreqtjUyYSYtYcpOtc3F4y7IGJI0ek0X4XcUEl4nicEPtTyRyPanpJcg/exec";
-    let isVerified = false;
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb95U9rbflq0JreqtjUyYSYtYcpOtc3F4y7IGJI0ek0X4XcUEl4nicEPtTyRyPanpJcg/exec"; // อย่าลืมแก้ลิงก์ถ้า Deploy ใหม่
+    
+    let isNameVerified = false;
+    let autoFetchedName = "";
 
+    // 1. ตรวจจับการเปลี่ยนประเภท (Role)
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+       radio.addEventListener('change', function() {
+          const role = this.value;
+          const pZone = document.getElementById('participantZone');
+          const mZone = document.getElementById('manualNameZone');
+          const survey = document.getElementById('surveyQuestions');
+          
+          document.getElementById('q_role').classList.remove('has-error');
+
+          if(role === 'ผู้เข้าร่วม') {
+             pZone.classList.remove('hidden');
+             mZone.classList.add('hidden');
+             lockSurvey(true);
+             isNameVerified = false;
+             document.getElementById('tsCode').value = '';
+             document.getElementById('autoNameDisplay').classList.add('hidden');
+          } else {
+             pZone.classList.add('hidden');
+             mZone.classList.remove('hidden');
+             lockSurvey(false); // วิทยากร/ทั่วไป พิมพ์ชื่อแล้วทำต่อได้เลย
+             isNameVerified = true; 
+          }
+       });
+    });
+
+    function lockSurvey(lock) {
+      const el = document.getElementById('surveyQuestions');
+      if(lock) {
+        el.classList.add('opacity-30', 'pointer-events-none');
+      } else {
+        el.classList.remove('opacity-30', 'pointer-events-none');
+      }
+    }
+
+    // 2. ตรวจรหัส TS เฉพาะผู้เข้าร่วม
     function checkTS(el) {
-      el.value = el.value.replace(/[^0-9]/g, ''); // รับเฉพาะตัวเลข
+      el.value = el.value.replace(/[^0-9]/g, '');
       const val = el.value;
-      const nameInput = document.getElementById('fullName');
-      const verifyBox = document.getElementById('verifyBox');
-      const verifyName = document.getElementById('verifyName');
+      const display = document.getElementById('autoNameDisplay');
+      const nameTxt = document.getElementById('fetchedName');
+      const confirmBox = document.getElementById('confirmBox');
+      const confirmedMsg = document.getElementById('confirmedMsg');
       
+      document.getElementById('q_tsCode').classList.remove('has-error');
+
       if (val.length === 3) {
-        nameInput.value = "กำลังดึงข้อมูลรายชื่อ...";
+        display.classList.remove('hidden');
+        nameTxt.innerText = "กำลังค้นหาข้อมูล...";
+        confirmBox.classList.add('hidden');
+        confirmedMsg.classList.add('hidden');
+        
         fetch(SCRIPT_URL + "?action=getUserByTS&code=" + val)
           .then(res => res.json())
           .then(data => {
             if (data.status === 'success') {
-              nameInput.value = data.name;
-              verifyName.innerText = data.name;
-              verifyBox.classList.remove('hidden'); // แสดงกล่องยืนยันตัวตน
-              document.getElementById('q_tsCode').querySelector('.error-text').style.display = 'none';
+              autoFetchedName = data.name;
+              nameTxt.innerText = data.name;
+              confirmBox.classList.remove('hidden');
             } else {
-              nameInput.value = "ไม่พบรหัสผู้ลงทะเบียนนี้";
-              verifyBox.classList.add('hidden');
+              nameTxt.innerText = "ไม่พบรหัสผู้ลงทะเบียนนี้";
             }
           });
       } else {
-        nameInput.value = "";
-        verifyBox.classList.add('hidden');
+        display.classList.add('hidden');
         lockSurvey(true);
+        isNameVerified = false;
       }
     }
 
-    function confirmIdentity(status) {
-      if(status) {
-         // ยืนยันสิทธิ์ถูกต้อง ปลดล็อกฟอร์มความพึงพอใจและเลื่อนหน้าจอลงทันที
-         lockSurvey(false);
-         document.getElementById('verifyBox').innerHTML = `<p class="text-emerald-600 font-bold text-[15px]"><i class="fi fi-sr-check"></i> ยืนยันสิทธิ์ตัวตนสำเร็จ เริ่มทำแบบสอบถามด้านล่างได้เลยครับ</p>`;
-         setTimeout(() => {
-            document.getElementById('surveySections').scrollIntoView({ behavior: 'smooth', block: 'start' });
-         }, 200);
-      } else {
-         // ไม่ใช่ รีเซ็ตค่าใหม่
-         document.getElementById('tsCode').value = '';
-         document.getElementById('fullName').value = '';
-         document.getElementById('verifyBox').classList.add('hidden');
-         lockSurvey(true);
-      }
+    function confirmName(status) {
+       if(status) {
+          // ถูกต้อง
+          document.getElementById('confirmBox').classList.add('hidden');
+          document.getElementById('confirmedMsg').classList.remove('hidden');
+          isNameVerified = true;
+          lockSurvey(false);
+       } else {
+          // ไม่ถูกต้อง ให้โชว์กล่องพิมพ์ชื่อเอง
+          document.getElementById('manualNameZone').classList.remove('hidden');
+          isNameVerified = true;
+          lockSurvey(false);
+          document.getElementById('autoNameDisplay').classList.add('hidden');
+       }
     }
 
-    function lockSurvey(status) {
-      const target = document.getElementById('surveySections');
-      if(status) {
-         target.classList.add('opacity-40', 'pointer-events-none');
-         isVerified = false;
-      } else {
-         target.classList.remove('opacity-40', 'pointer-events-none');
-         isVerified = true;
-      }
-    }
+    // 3. ฟังก์ชันกดส่งและ Validate สีแดง
+    function submitSurvey() {
+      // Clear errors
+      document.querySelectorAll('.question-box').forEach(el => el.classList.remove('has-error'));
+      let firstError = null;
 
-    function submitSurveyData() {
-      // เคลียร์คลาสและเอฟเฟกต์ Error เก่าทั้งหมดก่อน
-      document.querySelectorAll('.question-block, #q_role, #q_tsCode').forEach(el => el.classList.remove('has-error'));
-      document.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
+      // Check Role
+      const role = document.querySelector('input[name="role"]:checked');
+      if(!role) { showError('q_role'); if(!firstError) firstError = 'q_role'; }
 
-      let firstErrorEl = null;
-
-      // 1. ตรวจสอบการเลือกประเภทผู้ใช้งาน
-      const roleRadio = document.querySelector('input[name="role"]:checked');
-      if(!roleRadio) {
-         showError('q_role');
-         if(!firstErrorEl) firstErrorEl = document.getElementById('q_role');
-      }
-
-      // 2. ตรวจสอบรหัสประจำตัว
-      const tsCode = document.getElementById('tsCode').value;
-      if(!isVerified || tsCode.length !== 3) {
-         showError('q_tsCode');
-         if(!firstErrorEl) firstErrorEl = document.getElementById('q_tsCode');
-      }
-
-      // 3. ตรวจสอบการประเมินคะแนน D ถึง L
-      const scoreFields = ['scoreD', 'scoreE', 'scoreF', 'scoreG', 'scoreH', 'scoreI', 'scoreJ', 'scoreK', 'scoreL'];
-      scoreFields.forEach(field => {
-         const radio = document.querySelector(`input[name="${field}"]:checked`);
-         const blockId = 'q_' + field.replace('score', '');
-         if(!radio) {
-            showError(blockId);
-            if(!firstErrorEl) firstErrorEl = document.getElementById(blockId);
+      // Check Name Validation
+      let finalName = "";
+      if(role) {
+         if(role.value === 'ผู้เข้าร่วม') {
+            if(!isNameVerified) { showError('q_tsCode'); if(!firstError) firstError = 'q_tsCode'; }
+            else {
+               // ถ้าพิมพ์มือ
+               if(!document.getElementById('manualNameZone').classList.contains('hidden')) {
+                  finalName = document.getElementById('manualName').value.trim();
+                  if(!finalName) { showError('q_manualName'); if(!firstError) firstError = 'q_manualName'; }
+               } else {
+                  finalName = autoFetchedName;
+               }
+            }
+         } else {
+            finalName = document.getElementById('manualName').value.trim();
+            if(!finalName) { showError('q_manualName'); if(!firstError) firstError = 'q_manualName'; }
          }
+      }
+
+      // Check Ratings D-L
+      const scores = ['scoreD', 'scoreE', 'scoreF', 'scoreG', 'scoreH', 'scoreI', 'scoreJ', 'scoreK', 'scoreL'];
+      const scoreValues = {};
+      scores.forEach(s => {
+         const checked = document.querySelector(`input[name="${s}"]:checked`);
+         if(!checked) { showError('q_' + s); if(!firstError) firstError = 'q_' + s; }
+         else { scoreValues[s] = checked.value; }
       });
 
-      // 4. ตรวจสอบข้อถัดไปความสนใจในอนาคต
-      const futureInterest = document.querySelector('input[name="futureInterest"]:checked');
-      if(!futureInterest) {
-         showError('q_future');
-         if(!firstErrorEl) firstErrorEl = document.getElementById('q_future');
+      // Check Future interest
+      const future = document.querySelector('input[name="future"]:checked');
+      if(!future) { showError('q_future'); if(!firstError) firstError = 'q_future'; }
+
+      // เลื่อนหน้าไปหา Error แรกถ้ามี
+      if(firstError) {
+         document.getElementById(firstError).scrollIntoView({ behavior: 'smooth', block: 'center' });
+         return;
       }
 
-      // ตรวจสอบผลลัพธ์การคัดกรอง: หากพบข้อข้าม
-      if(firstErrorEl) {
-         firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-         return; // หยุดการทำงาน
-      }
-
-      // ดำเนินการจัดเก็บและส่ง Payload
+      // ส่งข้อมูล
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fi fi-sr-spinner animate-spin"></i> กำลังบันทึกแบบประเมิน...';
+      btn.innerHTML = 'กำลังประมวลผล...';
 
       const payload = {
         formType: 'satisfaction',
-        role: roleRadio.value,
-        tsCode: tsCode,
-        fullName: document.getElementById('fullName').value,
-        scoreD: document.querySelector('input[name="scoreD"]:checked').value,
-        scoreE: document.querySelector('input[name="scoreE"]:checked').value,
-        scoreF: document.querySelector('input[name="scoreF"]:checked').value,
-        scoreG: document.querySelector('input[name="scoreG"]:checked').value,
-        scoreH: document.querySelector('input[name="scoreH"]:checked').value,
-        scoreI: document.querySelector('input[name="scoreI"]:checked').value,
-        scoreJ: document.querySelector('input[name="scoreJ"]:checked').value,
-        scoreK: document.querySelector('input[name="scoreK"]:checked').value,
-        scoreL: document.querySelector('input[name="scoreL"]:checked').value,
-        futureInterest: futureInterest.value,
+        role: role.value,
+        tsCode: role.value === 'ผู้เข้าร่วม' ? document.getElementById('tsCode').value : '',
+        fullName: finalName,
+        scoreD: scoreValues.scoreD, scoreE: scoreValues.scoreE, scoreF: scoreValues.scoreF,
+        scoreG: scoreValues.scoreG, scoreH: scoreValues.scoreH, scoreI: scoreValues.scoreI,
+        scoreJ: scoreValues.scoreJ, scoreK: scoreValues.scoreK, scoreL: scoreValues.scoreL,
+        futureInterest: future.value,
         suggestions: document.getElementById('suggestions').value.trim()
       };
 
-      fetch(SCRIPT_URL, {
-         method: 'POST',
-         body: JSON.stringify(payload)
-      })
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(res => res.json())
       .then(res => {
          if(res.status === 'success') {
-            document.getElementById('surveyContainer').classList.add('hidden');
-            document.getElementById('successView').classList.remove('hidden');
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('successSection').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
          } else {
-            Swal.fire({ icon: 'error', title: 'ไม่สำเร็จ', text: res.message, confirmButtonColor: '#0f172a' });
-            btn.disabled = false;
-            btn.innerHTML = 'ส่งแบบสอบถามความพึงพอใจ <i class="fi fi-sr-paper-plane mt-0.5"></i>';
+            Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message });
+            btn.disabled = false; btn.innerHTML = 'ส่งแบบประเมิน';
          }
       })
       .catch(err => {
-         Swal.fire({ icon: 'error', title: 'ระบบขัดข้อง', text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ในขณะนี้' });
-         btn.disabled = false;
+         Swal.fire({ icon: 'error', title: 'ระบบขัดข้อง', text: 'ไม่สามารถส่งข้อมูลได้' });
+         btn.disabled = false; btn.innerHTML = 'ส่งแบบประเมิน';
       });
     }
 
     function showError(id) {
-       const el = document.getElementById(id);
-       if(el) {
-          el.classList.add('has-error');
-          const errText = el.querySelector('.error-text');
-          if(errText) errText.style.display = 'block';
-       }
+       document.getElementById(id).classList.add('has-error');
     }
+
+    // ลบสีแดงออกเวลา user เลือกคำตอบใหม่
+    document.querySelectorAll('input[type="radio"]').forEach(r => {
+       r.addEventListener('change', function() {
+          this.closest('.question-box').classList.remove('has-error');
+       });
+    });
+    document.getElementById('manualName').addEventListener('input', function() {
+       this.closest('.question-box').classList.remove('has-error');
+    });
   </script>
 </body>
 </html>
