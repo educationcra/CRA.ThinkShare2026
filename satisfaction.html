@@ -12,125 +12,172 @@
   <style>
     body { 
       font-family: 'Noto Sans Thai', sans-serif; 
-      background-color: #f8fafc;
-      color: #0f172a;
+      background-color: #f4f6f9; /* สีพื้นหลังสว่างสบายตา */
+      color: #334155;
+      overflow-x: hidden;
     }
     
+    /* ธีมพื้นหลังส่วนหัว (สไตล์ Tech Innovation) */
+    .tech-header-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 380px; z-index: -1;
+      background: linear-gradient(135deg, #0a192f 0%, #004d61 100%);
+      overflow: hidden;
+    }
+    /* วงแหวนเรืองแสงตกแต่งแบคกราวด์ */
+    .tech-header-bg::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%); top: -150px; left: -100px; border-radius: 50%; }
+    .tech-header-bg::after { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); bottom: -200px; right: -100px; border-radius: 50%; }
+
+    /* การ์ดคำถาม */
     .survey-card {
-      background: #ffffff; border-radius: 1.25rem; padding: 1.5rem; margin-bottom: 1rem;
-      border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;
+      background: #ffffff; border-radius: 1.5rem; padding: 1.75rem; margin-bottom: 1.25rem;
+      border: 1px solid #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03); transition: all 0.3s ease;
     }
-    .survey-card:hover { border-color: #93c5fd; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1); }
-    .survey-card.has-error { border-color: #ef4444; background-color: #fef2f2; }
+    .survey-card:hover { border-color: #cffafe; box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.08); }
+    .survey-card.has-error { border-color: #fca5a5; background-color: #fef2f2; animation: shake 0.4s ease-in-out; }
 
-    .input-box {
-      width: 100%; padding: 0.875rem 1.25rem; border-radius: 12px; border: 2px solid #e2e8f0;
-      font-weight: 600; font-size: 1rem; outline: none; transition: 0.2s; background: #f8fafc;
+    /* Input สไตล์ตามเรฟเฟอเรนซ์ (พื้นเทา ขอบมน ไม่มีเส้นขอบจนกว่าจะโฟกัส) */
+    .input-wrapper { position: relative; width: 100%; }
+    .input-icon { position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem; pointer-events: none; transition: 0.3s; }
+    .modern-input {
+      width: 100%; padding: 1rem 1.25rem 1rem 3rem; border-radius: 1rem; border: 2px solid transparent;
+      background: #f1f5f9; font-weight: 600; font-size: 1rem; color: #0f172a; outline: none; transition: all 0.3s;
     }
-    .input-box:focus { background: #fff; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+    .modern-input:focus { background: #ffffff; border-color: #06b6d4; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1); }
+    .modern-input:focus + .input-icon { color: #06b6d4; }
+    .modern-input:read-only { background: #f8fafc; color: #94a3b8; }
 
-    .error-text { color: #ef4444; font-size: 0.85rem; font-weight: 700; margin-top: 8px; display: none; }
+    /* ปุ่มคะแนน 1-5 ดีไซน์ใหม่ */
+    .rating-circle {
+      width: 3rem; height: 3rem; border-radius: 50%; background: #f1f5f9; color: #64748b;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; margin: 0 auto;
+    }
+    .peer:checked + .rating-circle {
+      background: linear-gradient(135deg, #0891b2, #06b6d4); color: white; transform: scale(1.15) translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4); border-color: transparent;
+    }
+    .peer:hover + .rating-circle { border-color: #a5f3fc; color: #0891b2; }
+
+    /* Checkbox & Radio Card */
+    .choice-card {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 1rem;
+      background: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; height: 100%;
+    }
+    .choice-card:hover { background: #f1f5f9; }
+    .peer:checked + .choice-card { background: #ecfeff; border-color: #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.1); }
+    
+    .choice-box {
+      width: 22px; height: 22px; border-radius: 6px; border: 2px solid #cbd5e1; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; transition: 0.2s; background: white;
+    }
+    .peer[type="radio"] + .choice-card .choice-box { border-radius: 50%; }
+    .peer:checked + .choice-card .choice-box { background: #0891b2; border-color: #0891b2; }
+
+    .error-text { color: #ef4444; font-size: 0.85rem; font-weight: 700; margin-top: 10px; display: none; }
     .survey-card.has-error .error-text { display: block; }
     
-    .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #2563eb; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+    .loader { border: 3px solid #e2e8f0; border-radius: 50%; border-top: 3px solid #06b6d4; width: 22px; height: 22px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    /* Custom Checkbox/Radio Cards ล้ำๆ */
-    .option-card {
-      display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: 12px;
-      border: 2px solid #e2e8f0; background: #ffffff; cursor: pointer; transition: all 0.2s;
-    }
-    .option-card:hover { background: #f8fafc; border-color: #cbd5e1; }
-    .peer:checked + .option-card { border-color: #2563eb; background: #eff6ff; box-shadow: 0 4px 12px rgba(37,99,235,0.1); }
-    
-    .check-box {
-      width: 20px; height: 20px; border-radius: 6px; border: 2px solid #cbd5e1; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; transition: all 0.2s; margin-top: 2px;
-    }
-    .peer:checked + .option-card .check-box { background: #2563eb; border-color: #2563eb; }
-    
-    .radio-box {
-      width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e1; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; transition: all 0.2s; margin-top: 2px; position: relative;
-    }
-    .peer:checked + .option-card .radio-box { border-color: #2563eb; }
-    .peer:checked + .option-card .radio-box::after { content: ''; position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #2563eb; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
   </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
-  <div class="bg-white border-b border-slate-200 py-4 px-6 flex justify-center sticky top-0 z-50 shadow-sm">
-    <img src="https://s.imgz.io/2026/04/08/image-119644b2a1df1904f.png" alt="CRA Logo" class="h-8 md:h-10">
+  <div class="tech-header-bg"></div>
+
+  <div class="w-full py-5 flex justify-center relative z-10">
+    <div class="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2.5 rounded-full shadow-lg">
+      <img src="https://s.imgz.io/2026/04/08/image-119644b2a1df1904f.png" alt="CRA Logo" class="h-8 md:h-10 brightness-0 invert">
+    </div>
   </div>
 
-  <div class="max-w-4xl mx-auto px-4 mt-8" id="formWrapper">
+  <div class="max-w-4xl mx-auto px-4 mt-6 relative z-10" id="formWrapper">
     
-    <div class="bg-white rounded-t-2xl border-t-8 border-t-blue-600 p-6 md:p-8 mb-6 shadow-sm border-x border-b border-slate-200">
-      <h1 class="text-2xl md:text-4xl font-black text-[#0f172a] mb-2 tracking-tight">แบบสอบถามความพึงพอใจ</h1>
-      <p class="text-slate-500 font-medium">โครงการ CRA Think Share Innovations & Inventions Forum 2026</p>
+    <div class="bg-white rounded-[2rem] p-8 md:p-10 mb-8 shadow-xl border border-slate-100 text-center">
+      <h1 class="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#0a2240] to-[#0891b2] mb-3 tracking-tight">
+        ✨ แบบสอบถามความพึงพอใจ ✨
+      </h1>
+      <p class="text-slate-500 font-medium text-sm md:text-base">โครงการ CRA Think Share Innovations & Inventions Forum 2026</p>
+      <div class="inline-block mt-4 px-4 py-1.5 bg-rose-50 text-red-500 rounded-full text-xs font-bold border border-rose-100">
+        * จำเป็นต้องตอบคำถาม
+      </div>
     </div>
 
     <form id="mainSurveyForm" novalidate>
       
       <div class="survey-card" id="block_role">
-        <p class="font-bold text-slate-800 text-lg mb-4">1. ประเภทผู้ทำแบบประเมิน <span class="text-red-500">*</span></p>
+        <p class="font-bold text-[#0a2240] text-lg mb-4">1. ประเภทผู้ทำแบบประเมิน <span class="text-red-500">*</span></p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <label><input type="radio" name="role" value="ผู้เข้าร่วม" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">ผู้เข้าร่วม (นักเรียน)</span></div></label>
-          <label><input type="radio" name="role" value="วิทยากร" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">วิทยากร / คณะทำงาน</span></div></label>
-          <label><input type="radio" name="role" value="ทั่วไป" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">บุคคลทั่วไป / ผู้ติดตาม</span></div></label>
+          <label><input type="radio" name="role" value="ผู้เข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ผู้เข้าร่วม (นักเรียน)</span></div></label>
+          <label><input type="radio" name="role" value="วิทยากร" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">วิทยากร / คณะทำงาน</span></div></label>
+          <label><input type="radio" name="role" value="ทั่วไป" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">บุคคลทั่วไป / ผู้ติดตาม</span></div></label>
         </div>
         <div class="error-text">กรุณาเลือกประเภทผู้ทำแบบประเมิน</div>
       </div>
 
       <div id="participantZone" class="hidden">
-        <div class="survey-card" id="block_tsCode">
-          <p class="font-bold text-slate-800 mb-2 text-lg">รหัสประจำตัวของท่าน (TS-XXX) <span class="text-red-500">*</span></p>
-          <p class="text-sm text-slate-500 mb-4 font-medium">พิมพ์เฉพาะตัวเลข 3 หลัก ระบบจะดึงชื่ออัตโนมัติ</p>
+        <div class="survey-card bg-gradient-to-br from-white to-cyan-50/30" id="block_tsCode">
+          <p class="font-bold text-[#0a2240] mb-1 text-lg">รหัสประจำตัวของท่าน (TS-XXX) <span class="text-red-500">*</span></p>
+          <p class="text-sm text-slate-500 mb-5 font-medium">พิมพ์เฉพาะตัวเลข 3 หลัก (เช่น 001)</p>
           
-          <div class="flex flex-col sm:flex-row gap-3 relative">
-            <div class="relative w-full sm:w-auto">
-               <input type="text" inputmode="numeric" id="tsCode" maxlength="3" class="input-box sm:w-[120px] text-center text-xl font-black tracking-widest" placeholder="000" oninput="fetchStudentName(this)">
-               <div id="loadingSpinner" class="absolute right-3 top-3.5 hidden"><div class="loader"></div></div>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+            <div class="md:col-span-4 relative">
+               <div class="input-wrapper">
+                 <input type="text" inputmode="numeric" id="tsCode" maxlength="3" class="modern-input text-center tracking-widest text-lg font-black !pl-4" placeholder="000" oninput="fetchStudentName(this)">
+                 <div id="loadingSpinner" class="absolute right-4 top-1/2 -translate-y-1/2 hidden"><div class="loader"></div></div>
+               </div>
             </div>
-            <input type="text" id="autoName" class="input-box bg-slate-100 text-slate-400 cursor-not-allowed" placeholder="ชื่อจะแสดงอัตโนมัติ" readonly>
+            <div class="md:col-span-8">
+               <div class="input-wrapper">
+                 <input type="text" id="autoName" class="modern-input" placeholder="ระบบจะดึงชื่อขึ้นมาอัตโนมัติ..." readonly>
+                 <i class="fi fi-sr-user input-icon"></i>
+               </div>
+            </div>
           </div>
           <div class="error-text">กรุณากรอกรหัส TS ให้ถูกต้อง และกดยืนยันข้อมูล</div>
 
-          <div id="confirmIdentityBox" class="hidden mt-4 p-5 rounded-xl bg-blue-50 border border-blue-200 text-center">
-            <p class="font-bold text-slate-700 mb-3 text-lg">คุณคือ <span id="lblStudentName" class="text-blue-700 font-black"></span> ใช่หรือไม่?</p>
+          <div id="confirmIdentityBox" class="hidden mt-5 p-5 rounded-2xl bg-cyan-50 border border-cyan-100 text-center">
+            <p class="font-bold text-slate-700 mb-4">ชื่อของคุณคือ <span id="lblStudentName" class="text-cyan-700 text-lg font-black bg-white px-3 py-1 rounded-lg border border-cyan-200 ml-1"></span> ใช่หรือไม่?</p>
             <div class="flex justify-center gap-3">
-               <button type="button" onclick="actionVerify(true)" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition">ใช่, ข้อมูลถูกต้อง</button>
-               <button type="button" onclick="actionVerify(false)" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition">ไม่ใช่</button>
+               <button type="button" onclick="actionVerify(true)" class="px-6 py-2.5 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 hover:shadow-lg hover:-translate-y-0.5 transition-all">ใช่, ถูกต้อง</button>
+               <button type="button" onclick="actionVerify(false)" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-all">ไม่ใช่</button>
             </div>
           </div>
-          <div id="verifySuccessLabel" class="hidden mt-4 text-sm font-black text-emerald-600 flex items-center gap-1.5 bg-emerald-50 w-fit px-3 py-1.5 rounded-md border border-emerald-100"><i class="fi fi-sr-check-circle"></i> ยืนยันข้อมูลสำเร็จ</div>
+          <div id="verifySuccessLabel" class="hidden mt-4 text-sm font-black text-emerald-600 flex items-center gap-1.5 bg-emerald-50 w-fit px-4 py-2 rounded-xl border border-emerald-100"><i class="fi fi-sr-shield-check text-lg"></i> ยืนยันข้อมูลสำเร็จแล้ว</div>
         </div>
       </div>
 
       <div id="manualNameZone" class="hidden">
         <div class="survey-card" id="block_manualName">
-          <p class="font-bold text-slate-800 mb-3 text-lg">ชื่อ-นามสกุล ของท่าน <span class="text-red-500">*</span></p>
-          <input type="text" id="manualName" class="input-box" placeholder="กรอกชื่อ-นามสกุลเต็ม...">
+          <p class="font-bold text-[#0a2240] mb-4 text-lg">ชื่อ-นามสกุล ของท่าน <span class="text-red-500">*</span></p>
+          <div class="input-wrapper">
+             <input type="text" id="manualName" class="modern-input" placeholder="ระบุชื่อ-นามสกุลเต็ม...">
+             <i class="fi fi-sr-user input-icon"></i>
+          </div>
           <div class="error-text">กรุณาระบุชื่อ-นามสกุล</div>
         </div>
       </div>
 
-      <div id="surveyQuestionsZone" class="opacity-40 pointer-events-none transition-all duration-300 mt-8">
+      <div id="surveyQuestionsZone" class="opacity-40 pointer-events-none transition-all duration-300 mt-10">
         
-        <div class="mb-4 flex items-center gap-2">
-          <h2 class="text-xl font-black text-blue-700">ส่วนที่ 2: ความพึงพอใจต่อกิจกรรม</h2>
+        <div class="mb-6 flex items-center gap-3 px-2">
+          <div class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600"><i class="fi fi-sr-star text-lg mt-0.5"></i></div>
+          <div>
+             <h2 class="text-xl font-black text-[#0a2240]">ส่วนที่ 2: ความพึงพอใจต่อกิจกรรม</h2>
+             <p class="text-sm font-bold text-cyan-600">โปรดให้คะแนนตามระดับความพึงพอใจ</p>
+          </div>
         </div>
 
         <script>
           function createScale(name) {
-            const labels = ["น้อย<br>ที่สุด", "น้อย", "ปานกลาง", "มาก", "มาก<br>ที่สุด"];
-            let html = '<div class="flex justify-between items-start mt-4 bg-slate-50/50 p-2 sm:p-4 rounded-xl border border-slate-100">';
+            const labels = ["น้อยที่สุด", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"];
+            let html = '<div class="flex justify-between items-end mt-5 pt-5 border-t border-slate-100 gap-1 sm:gap-2">';
             for(let i=1; i<=5; i++) {
               html += `
                 <label class="flex flex-col items-center gap-2 cursor-pointer group flex-1">
                   <input type="radio" name="${name}" value="${i}" class="peer sr-only">
-                  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white transition-all peer-checked:shadow-md peer-checked:scale-110 group-hover:border-blue-400 bg-white text-sm sm:text-base">${i}</div>
-                  <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 peer-checked:text-blue-600 text-center leading-tight h-8">${labels[i-1]}</span>
+                  <div class="rating-circle">${i}</div>
+                  <span class="text-[10px] sm:text-[12px] font-bold text-slate-400 peer-checked:text-cyan-600 text-center transition-colors">${labels[i-1]}</span>
                 </label>
               `;
             }
@@ -139,37 +186,44 @@
           }
         </script>
 
-        <div class="survey-card" id="block_scoreD"><p class="font-bold text-slate-800 leading-relaxed">2. นิทรรศการงานประกวดนวัตกรรมและสิ่งประดิษฐ์ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreD'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreE"><p class="font-bold text-slate-800 leading-relaxed">3. บรรยายพิเศษ: บทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreE'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreF"><p class="font-bold text-slate-800 leading-relaxed">4. ปาฐกถาพิเศษ: การวางรากฐานสู่ประเทศรายได้สูงฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreF'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreG"><p class="font-bold text-slate-800 leading-relaxed">5. บรรยายพิเศษ: AICEDA ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย <span class="text-red-500">*</span></p><script>document.write(createScale('scoreG'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreH"><p class="font-bold text-slate-800 leading-relaxed">6. บรรยายพิเศษ: Pitching Idea 101 ไอเดียปัง ทุนวิจัยพุ่ง! <span class="text-red-500">*</span></p><script>document.write(createScale('scoreH'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreI"><p class="font-bold text-slate-800 leading-relaxed">7. บรรยายพิเศษ: AI & Me คู่หูสร้างสรรค์ผลงานยุคดิจิทัล <span class="text-red-500">*</span></p><script>document.write(createScale('scoreI'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreJ"><p class="font-bold text-slate-800 leading-relaxed">8. บรรยายพิเศษ: We are Innovator จุดประกายนวัตกร <span class="text-red-500">*</span></p><script>document.write(createScale('scoreJ'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreK"><p class="font-bold text-slate-800 leading-relaxed">9. กิจกรรม Workshop : We are Innovator <span class="text-red-500">*</span></p><script>document.write(createScale('scoreK'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreD"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">2. นิทรรศการงานประกวดนวัตกรรมและสิ่งประดิษฐ์ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreD'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreE"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">3. บรรยายพิเศษ: บทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreE'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreF"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">4. ปาฐกถาพิเศษ: การวางรากฐานสู่ประเทศรายได้สูงฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreF'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreG"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">5. บรรยายพิเศษ: AICEDA ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย <span class="text-red-500">*</span></p><script>document.write(createScale('scoreG'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreH"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">6. บรรยายพิเศษ: Pitching Idea 101 ไอเดียปัง ทุนวิจัยพุ่ง! <span class="text-red-500">*</span></p><script>document.write(createScale('scoreH'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreI"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">7. บรรยายพิเศษ: AI & Me คู่หูสร้างสรรค์ผลงานยุคดิจิทัล <span class="text-red-500">*</span></p><script>document.write(createScale('scoreI'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreJ"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">8. บรรยายพิเศษ: We are Innovator จุดประกายนวัตกร <span class="text-red-500">*</span></p><script>document.write(createScale('scoreJ'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreK"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">9. กิจกรรม Workshop : We are Innovator <span class="text-red-500">*</span></p><script>document.write(createScale('scoreK'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
 
-        <div class="survey-card border-l-4 border-l-blue-600 bg-blue-50/20" id="block_scoreL">
-          <p class="font-black text-blue-900 text-lg leading-relaxed">10. ให้คะแนนภาพรวมของกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
+        <div class="survey-card border-2 border-cyan-100 bg-cyan-50/30" id="block_scoreL">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-black tracking-wider uppercase">Overview</span>
+          </div>
+          <p class="font-black text-[#0a2240] text-xl leading-relaxed">10. ให้คะแนนภาพรวมของกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
           <script>document.write(createScale('scoreL'));</script>
           <div class="error-text">กรุณาให้คะแนนภาพรวม</div>
         </div>
 
-        <div class="survey-card bg-slate-50/50" id="block_programs">
-          <div class="mb-4">
+        <div class="my-8 px-2 flex items-center gap-3 border-t border-slate-200 pt-8">
+           <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><i class="fi fi-sr-graduation-cap text-lg mt-0.5"></i></div>
+           <h2 class="text-xl font-black text-[#0a2240]">ส่วนที่ 3: ข้อมูลการศึกษาต่อ</h2>
+        </div>
+
+        <div class="survey-card" id="block_programs">
+          <div class="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
              <p class="font-bold text-slate-800 text-lg">11. หลักสูตรใดที่ท่านสนใจมากที่สุด <span class="text-red-500">*</span></p>
-             <p class="text-sm font-bold text-blue-600 bg-blue-100 w-fit px-3 py-1 rounded-full mt-2">เลือกได้สูงสุด 3 ข้อ</p>
+             <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100 text-center">เลือกได้สูงสุด 3 ข้อ</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="programOptions">
-             </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="programOptions"></div>
           <div class="error-text">กรุณาเลือกอย่างน้อย 1 หลักสูตร (และไม่เกิน 3 หลักสูตร)</div>
         </div>
 
         <div class="survey-card" id="block_rounds">
           <p class="font-bold text-slate-800 text-lg mb-4">12. รอบการรับสมัครที่ท่านสนใจมากที่สุด <span class="text-red-500">*</span></p>
-          <div class="flex flex-col sm:flex-row gap-3">
-             <label><input type="radio" name="rounds" value="รอบ 1 Portfolio" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">รอบ 1 Portfolio</span></div></label>
-             <label><input type="radio" name="rounds" value="รอบ 2 Quota" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">รอบ 2 Quota</span></div></label>
-             <label><input type="radio" name="rounds" value="รอบ 3 Admission" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">รอบ 3 Admission</span></div></label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+             <label><input type="radio" name="rounds" value="รอบ 1 Portfolio" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 1 Portfolio</span></div></label>
+             <label><input type="radio" name="rounds" value="รอบ 2 Quota" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 2 Quota</span></div></label>
+             <label><input type="radio" name="rounds" value="รอบ 3 Admission" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 3 Admission</span></div></label>
           </div>
           <div class="error-text">กรุณาเลือกรอบการรับสมัครที่สนใจ</div>
         </div>
@@ -177,51 +231,57 @@
         <div class="survey-card" id="block_future">
           <p class="font-bold text-slate-800 mb-4 text-lg">13. หากมีกิจกรรมรูปแบบนี้อีกในอนาคต ท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <label><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">สนใจเข้าร่วมแน่นอน</span></div></label>
-            <label><input type="radio" name="future" value="ไม่สนใจเข้าร่วม" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">ไม่สนใจเข้าร่วม</span></div></label>
-            <label><input type="radio" name="future" value="ยังไม่แน่ใจ" class="peer sr-only"><div class="option-card"><div class="radio-box"></div><span class="font-bold text-slate-700">ยังไม่แน่ใจ / ขอดูความพร้อม</span></div></label>
+            <label><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">สนใจเข้าร่วมแน่นอน</span></div></label>
+            <label><input type="radio" name="future" value="ไม่สนใจเข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">ไม่สนใจเข้าร่วม</span></div></label>
+            <label><input type="radio" name="future" value="ยังไม่แน่ใจ" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">ยังไม่แน่ใจ</span></div></label>
           </div>
           <div class="error-text">กรุณาเลือกหนึ่งคำตอบ</div>
         </div>
 
         <div class="survey-card">
-          <p class="font-bold text-slate-800 mb-2">ข้อเสนอแนะอื่น ๆ เพิ่มเติม</p>
-          <textarea id="txtSuggestions" rows="3" class="input-box" placeholder="คำติชม หรือสิ่งที่อยากให้เพิ่ม..."></textarea>
+          <p class="font-bold text-slate-800 mb-3 text-lg">ข้อเสนอแนะอื่น ๆ เพิ่มเติม</p>
+          <div class="input-wrapper">
+             <textarea id="txtSuggestions" rows="3" class="modern-input !rounded-2xl" placeholder="คำติชม หรือสิ่งที่อยากให้เพิ่ม..."></textarea>
+             <i class="fi fi-sr-comment-alt input-icon !top-6"></i>
+          </div>
         </div>
 
-        <button type="button" id="btnSubmitSurvey" onclick="executeSubmit()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg shadow-blue-600/30 mt-4 flex justify-center items-center gap-2">
-           ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-0.5"></i>
+        <button type="button" id="btnSubmitSurvey" onclick="executeSubmit()" class="w-full bg-gradient-to-r from-[#0a2240] to-[#0891b2] text-white py-4 sm:py-5 rounded-2xl font-black text-lg hover:shadow-[0_10px_30px_-10px_rgba(8,145,178,0.5)] transition-all hover:-translate-y-1 mt-6 flex justify-center items-center gap-3">
+           ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-1"></i>
         </button>
 
       </div>
     </form>
   </div>
 
-  <div id="successWrapper" class="hidden max-w-md mx-auto mt-20 text-center px-4">
-     <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border border-emerald-200">
-        <i class="fi fi-sr-check-circle text-5xl text-emerald-500"></i>
+  <div id="successWrapper" class="hidden max-w-md mx-auto mt-24 text-center px-4">
+     <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+        <div class="absolute inset-0 bg-emerald-400 rounded-full animate-ping opacity-20"></div>
+        <i class="fi fi-sr-check-circle text-5xl text-emerald-500 relative z-10"></i>
      </div>
-     <h2 class="text-3xl font-black text-slate-800 mb-2">บันทึกข้อมูลเรียบร้อย</h2>
-     <p class="text-slate-500 mb-8 font-medium">ราชวิทยาลัยจุฬาภรณ์ขอขอบพระคุณสำหรับความคิดเห็นครับ</p>
+     <h2 class="text-3xl font-black text-[#0a2240] mb-2 tracking-tight">บันทึกข้อมูลเรียบร้อย</h2>
+     <p class="text-slate-500 mb-10 font-medium">ราชวิทยาลัยจุฬาภรณ์ขอขอบพระคุณสำหรับความคิดเห็นครับ</p>
      
      <div id="certBox" class="mb-10 hidden">
         <a id="certDownloadLink" href="#" target="_blank" class="block group no-underline">
-           <div class="bg-gradient-to-br from-[#0f172a] to-blue-900 p-8 rounded-[2rem] text-white shadow-2xl hover:-translate-y-2 transition duration-300 border border-blue-500/20">
-              <i class="fi fi-sr-award text-6xl text-amber-400 block mb-4 animate-pulse"></i>
-              <h3 class="text-xl font-black text-amber-400 mb-1">รับเกียรติบัตร</h3>
-              <p class="text-slate-300 text-sm">คลิกเพื่อรับ E-Certificate ของท่าน</p>
+           <div class="bg-gradient-to-br from-[#0a2240] to-[#0891b2] p-8 rounded-[2rem] text-white shadow-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(8,145,178,0.5)] transition-all duration-300 relative overflow-hidden">
+              <div class="absolute -right-10 -bottom-10 w-40 h-40 border-[20px] border-white/5 rounded-full"></div>
+              
+              <i class="fi fi-sr-award text-6xl text-cyan-300 block mb-5 animate-pulse relative z-10"></i>
+              <h3 class="text-2xl font-black text-white mb-2 relative z-10">รับเกียรติบัตร</h3>
+              <p class="text-cyan-100 text-sm font-medium relative z-10">คลิกเพื่อรับ E-Certificate ของท่าน</p>
            </div>
         </a>
      </div>
 
-     <div id="certNotFound" class="mb-10 hidden p-4 bg-orange-50 border border-orange-200 rounded-xl">
-        <p class="text-orange-700 font-bold"><i class="fi fi-sr-info"></i> ไม่พบไฟล์เกียรติบัตรในระบบ กรุณาติดต่อทีมงาน</p>
+     <div id="certNotFound" class="mb-10 hidden p-5 bg-rose-50 border border-rose-200 rounded-2xl">
+        <p class="text-rose-600 font-bold"><i class="fi fi-sr-info text-lg align-middle mr-1"></i> ไม่พบไฟล์เกียรติบัตรในระบบ<br><span class="text-sm font-medium mt-1 block">กรุณาติดต่อทีมงานเพื่อตรวจสอบข้อมูล</span></p>
      </div>
   </div>
 
   <script>
     // ⚠️ ลิงก์ API ล่าสุดของคุณ 
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZrOesuYN-6AhBxFx7ZBpNkjwgPeMutI3KFuRBZxt6xh7Ka-KJi4CwMq_N1E-kyaEUAQ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztDLz6JakYxZE83DlmEKr2CVugQZt36M-9KqDFsG8y-TLwMr6YM63xjaVvdhxI9yhUag/exec";
     
     let isVerified = false;
     let verifiedNameStr = "";
@@ -235,28 +295,26 @@
       "วศ.บ.สาขาวิชาวิศวกรรมชีวการแพทย์", "วท.บ. สาขาวิชาเทคโนโลยีอาหารทางการแพทย์และสุขภาพ"
     ];
 
-    // สร้างกล่อง Checkbox หลักสูตร
     const programOptionsContainer = document.getElementById('programOptions');
-    programsList.forEach((prog, index) => {
+    programsList.forEach((prog) => {
       programOptionsContainer.innerHTML += `
         <label>
           <input type="checkbox" name="programs" value="${prog}" class="peer sr-only">
-          <div class="option-card h-full">
-            <div class="check-box"><svg class="w-3 h-3 text-white hidden peer-checked:block" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-            <span class="font-bold text-slate-700 text-[13.5px] leading-snug">${prog}</span>
+          <div class="choice-card !items-start h-full">
+            <div class="choice-box mt-0.5"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+            <span class="font-bold text-slate-600 text-[13px] leading-relaxed peer-checked:text-cyan-800">${prog}</span>
           </div>
         </label>
       `;
     });
 
-    // ล็อกให้เลือกสูงสุด 3 ข้อ (Checkbox P1)
-    const programCheckboxes = document.querySelectorAll('input[name="programs"]');
-    programCheckboxes.forEach(cb => {
+    // ล็อกให้เลือกสูงสุด 3 ข้อ 
+    document.querySelectorAll('input[name="programs"]').forEach(cb => {
       cb.addEventListener('change', function() {
         const checkedCount = document.querySelectorAll('input[name="programs"]:checked').length;
         if (checkedCount > 3) {
           this.checked = false;
-          Swal.fire({ icon: 'warning', title: 'จำกัดจำนวน', text: 'ท่านสามารถเลือกหลักสูตรที่สนใจได้สูงสุด 3 ข้อครับ', confirmButtonColor: '#2563eb' });
+          Swal.fire({ icon: 'warning', title: 'เลือกได้สูงสุด 3 ข้อ', text: 'ท่านสามารถเลือกหลักสูตรที่สนใจได้ไม่เกิน 3 อันดับครับ', confirmButtonColor: '#0891b2', customClass: { popup: 'rounded-3xl' } });
         }
         this.closest('.survey-card').classList.remove('has-error');
       });
@@ -311,7 +369,7 @@
        clearTimeout(fetchTimeout); 
 
        if (val.length === 3) {
-          nameInp.value = "กำลังค้นหา...";
+          nameInp.value = "กำลังดึงข้อมูล...";
           spinner.classList.remove('hidden'); 
           el.disabled = true; 
           
@@ -328,14 +386,14 @@
                     lblName.innerText = data.name;
                     cBox.classList.remove('hidden'); 
                  } else {
-                    nameInp.value = "ไม่พบรหัสผู้ลงทะเบียนนี้";
+                    nameInp.value = "ไม่พบรหัสนี้";
                     cBox.classList.add('hidden');
                  }
               })
               .catch(err => {
                  spinner.classList.add('hidden');
                  el.disabled = false;
-                 nameInp.value = "เกิดข้อผิดพลาดในการเชื่อมต่อ";
+                 nameInp.value = "ขัดข้อง...";
               });
           }, 500); 
        } else {
@@ -400,11 +458,11 @@
           else { scorePayload[fKey] = checkedRadio.value; }
        });
 
-       // ดึงข้อมูลหลักสูตร P1
+       // ดึงข้อมูลหลักสูตร (บังคับเลือกอย่างน้อย 1)
        const selectedPrograms = Array.from(document.querySelectorAll('input[name="programs"]:checked')).map(cb => cb.value);
        if(selectedPrograms.length === 0) { markError('block_programs'); if(!firstErrNode) firstErrNode = 'block_programs'; }
 
-       // ดึงข้อมูลรอบรับสมัคร Q1
+       // ดึงข้อมูลรอบ
        const roundRadio = document.querySelector('input[name="rounds"]:checked');
        if(!roundRadio) { markError('block_rounds'); if(!firstErrNode) firstErrNode = 'block_rounds'; }
 
@@ -418,7 +476,7 @@
 
        const submitBtn = document.getElementById('btnSubmitSurvey');
        submitBtn.disabled = true;
-       submitBtn.innerHTML = '<i class="fi fi-sr-spinner animate-spin mr-2"></i> กำลังบันทึกข้อมูล...';
+       submitBtn.innerHTML = '<div class="loader mr-2 !border-t-white !border-white/30"></div> กำลังบันทึกข้อมูล...';
 
        const finalPayload = {
           formType: 'satisfaction',
@@ -428,7 +486,7 @@
           scoreD: scorePayload.scoreD, scoreE: scorePayload.scoreE, scoreF: scorePayload.scoreF,
           scoreG: scorePayload.scoreG, scoreH: scorePayload.scoreH, scoreI: scorePayload.scoreI,
           scoreJ: scorePayload.scoreJ, scoreK: scorePayload.scoreK, scoreL: scorePayload.scoreL,
-          programs: selectedPrograms.join(', '),  // ส่งเป็น string คั่นด้วยลูกน้ำ
+          programs: selectedPrograms.join(', '),
           rounds: roundRadio.value,
           futureInterest: futureRadio.value,
           suggestions: document.getElementById('txtSuggestions').value.trim()
@@ -439,12 +497,12 @@
          .then(res => {
             if(res.status === 'success') {
                document.getElementById('formWrapper').style.display = 'none';
+               document.querySelector('.tech-header-bg').style.display = 'none'; // ซ่อนแบคกราวด์เดิม
                document.getElementById('successWrapper').classList.remove('hidden');
                
                if (roleSelected.value === 'ผู้เข้าร่วม') {
                    const certBox = document.getElementById('certBox');
                    const certNotFound = document.getElementById('certNotFound');
-                   // เช็คลิงก์เกียรติบัตรเพื่อแสดงผล
                    if (res.downloadUrl && res.downloadUrl !== "" && res.downloadUrl !== "-" && res.downloadUrl !== "ไม่พบไฟล์") {
                        certBox.classList.remove('hidden');
                        document.getElementById('certDownloadLink').href = res.downloadUrl;
@@ -454,19 +512,18 @@
                }
                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-               Swal.fire({ icon: 'error', title: 'ไม่สำเร็จ', text: res.message });
-               submitBtn.disabled = false; submitBtn.innerHTML = 'ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-0.5"></i>';
+               Swal.fire({ icon: 'error', title: 'ไม่สำเร็จ', text: res.message, customClass: { popup: 'rounded-3xl' } });
+               submitBtn.disabled = false; submitBtn.innerHTML = 'ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-1"></i>';
             }
          })
          .catch(err => {
-            Swal.fire({ icon: 'error', title: 'ระบบขัดข้อง', text: 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต' });
-            submitBtn.disabled = false; submitBtn.innerHTML = 'ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-0.5"></i>';
+            Swal.fire({ icon: 'error', title: 'ระบบขัดข้อง', text: 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต', customClass: { popup: 'rounded-3xl' } });
+            submitBtn.disabled = false; submitBtn.innerHTML = 'ส่งแบบประเมินความพึงพอใจ <i class="fi fi-sr-paper-plane mt-1"></i>';
          });
     }
 
     function markError(id) { document.getElementById(id).classList.add('has-error'); }
 
-    // เคลียร์ขอบแดงทันทีเมื่อมีการติ๊ก
     document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
        input.addEventListener('change', function() { this.closest('.survey-card').classList.remove('has-error'); });
     });
