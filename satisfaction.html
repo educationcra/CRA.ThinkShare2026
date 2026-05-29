@@ -12,18 +12,17 @@
   <style>
     body { 
       font-family: 'Noto Sans Thai', sans-serif; 
-      background-color: #f4f6f9; /* สีพื้นหลังสว่างสบายตา */
+      background-color: #f4f6f9; 
       color: #334155;
       overflow-x: hidden;
     }
     
-    /* ธีมพื้นหลังส่วนหัว (สไตล์ Tech Innovation) */
+    /* ธีมพื้นหลังส่วนหัว */
     .tech-header-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 380px; z-index: -1;
       background: linear-gradient(135deg, #0a192f 0%, #004d61 100%);
       overflow: hidden;
     }
-    /* วงแหวนเรืองแสงตกแต่งแบคกราวด์ */
     .tech-header-bg::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%); top: -150px; left: -100px; border-radius: 50%; }
     .tech-header-bg::after { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); bottom: -200px; right: -100px; border-radius: 50%; }
 
@@ -35,43 +34,48 @@
     .survey-card:hover { border-color: #cffafe; box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.08); }
     .survey-card.has-error { border-color: #fca5a5; background-color: #fef2f2; animation: shake 0.4s ease-in-out; }
 
-    /* Input สไตล์ตามเรฟเฟอเรนซ์ (พื้นเทา ขอบมน ไม่มีเส้นขอบจนกว่าจะโฟกัส) */
+    /* Input สไตล์ Modern */
     .input-wrapper { position: relative; width: 100%; }
     .input-icon { position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem; pointer-events: none; transition: 0.3s; }
     .modern-input {
       width: 100%; padding: 1rem 1.25rem 1rem 3rem; border-radius: 1rem; border: 2px solid transparent;
-      background: #f1f5f9; font-weight: 600; font-size: 1rem; color: #0f172a; outline: none; transition: all 0.3s;
+      background: #f1f5f9; font-weight: 600; font-size: 1rem; color: #0f172a; outline: none; transition: all 0.2s;
     }
     .modern-input:focus { background: #ffffff; border-color: #06b6d4; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1); }
     .modern-input:focus + .input-icon { color: #06b6d4; }
     .modern-input:read-only { background: #f8fafc; color: #94a3b8; }
 
-    /* ปุ่มคะแนน 1-5 ดีไซน์ใหม่ */
+    /* ปุ่มคะแนน 1-5 (แก้ปัญหาความหน่วง ใช้ Solid Color และเร่ง Transition) */
     .rating-circle {
-      width: 3rem; height: 3rem; border-radius: 50%; background: #f1f5f9; color: #64748b;
+      width: 3rem; height: 3rem; border-radius: 50%; background-color: #f1f5f9; color: #64748b;
       display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; margin: 0 auto;
+      border: 2px solid transparent; margin: 0 auto;
+      transition: transform 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out, box-shadow 0.15s ease-out;
     }
     .peer:checked + .rating-circle {
-      background: linear-gradient(135deg, #0891b2, #06b6d4); color: white; transform: scale(1.15) translateY(-2px);
-      box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4); border-color: transparent;
+      background-color: #0891b2; color: white; transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 8px 16px -4px rgba(8, 145, 178, 0.4); border-color: transparent;
     }
     .peer:hover + .rating-circle { border-color: #a5f3fc; color: #0891b2; }
 
-    /* Checkbox & Radio Card */
+    /* Checkbox & Radio Card (ลดความหน่วง) */
     .choice-card {
       display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 1rem;
-      background: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; height: 100%;
+      background-color: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: all 0.15s ease-out; height: 100%;
     }
-    .choice-card:hover { background: #f1f5f9; }
-    .peer:checked + .choice-card { background: #ecfeff; border-color: #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.1); }
+    .choice-card:hover { background-color: #f1f5f9; }
+    .peer:checked + .choice-card { background-color: #ecfeff; border-color: #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.1); }
     
     .choice-box {
       width: 22px; height: 22px; border-radius: 6px; border: 2px solid #cbd5e1; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; transition: 0.2s; background: white;
+      display: flex; align-items: center; justify-content: center; transition: all 0.15s ease-out; background-color: white;
     }
     .peer[type="radio"] + .choice-card .choice-box { border-radius: 50%; }
-    .peer:checked + .choice-card .choice-box { background: #0891b2; border-color: #0891b2; }
+    .peer:checked + .choice-card .choice-box { background-color: #0891b2; border-color: #0891b2; }
+
+    /* แก้ปัญหาไอคอนติ๊กถูกดูโล่งๆ ให้มีสีเทาจางๆ เวลายังไม่ติ๊ก */
+    .check-icon { color: #e2e8f0; transition: color 0.15s ease-out; }
+    .peer:checked + .choice-card .check-icon { color: #ffffff; }
 
     .error-text { color: #ef4444; font-size: 0.85rem; font-weight: 700; margin-top: 10px; display: none; }
     .survey-card.has-error .error-text { display: block; }
@@ -108,9 +112,9 @@
       <div class="survey-card" id="block_role">
         <p class="font-bold text-[#0a2240] text-lg mb-4">1. ประเภทผู้ทำแบบประเมิน <span class="text-red-500">*</span></p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <label><input type="radio" name="role" value="ผู้เข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ผู้เข้าร่วม (นักเรียน)</span></div></label>
-          <label><input type="radio" name="role" value="วิทยากร" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">วิทยากร / คณะทำงาน</span></div></label>
-          <label><input type="radio" name="role" value="ทั่วไป" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">บุคคลทั่วไป / ผู้ติดตาม</span></div></label>
+          <label><input type="radio" name="role" value="ผู้เข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ผู้เข้าร่วม (นักเรียน)</span></div></label>
+          <label><input type="radio" name="role" value="วิทยากร" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">วิทยากร / คณะทำงาน</span></div></label>
+          <label><input type="radio" name="role" value="ทั่วไป" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">บุคคลทั่วไป / ผู้ติดตาม</span></div></label>
         </div>
         <div class="error-text">กรุณาเลือกประเภทผู้ทำแบบประเมิน</div>
       </div>
@@ -221,9 +225,9 @@
         <div class="survey-card" id="block_rounds">
           <p class="font-bold text-slate-800 text-lg mb-4">12. รอบการรับสมัครที่ท่านสนใจมากที่สุด <span class="text-red-500">*</span></p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-             <label><input type="radio" name="rounds" value="รอบ 1 Portfolio" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 1 Portfolio</span></div></label>
-             <label><input type="radio" name="rounds" value="รอบ 2 Quota" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 2 Quota</span></div></label>
-             <label><input type="radio" name="rounds" value="รอบ 3 Admission" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">รอบ 3 Admission</span></div></label>
+             <label><input type="radio" name="rounds" value="รอบ 1 Portfolio" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">รอบ 1 Portfolio</span></div></label>
+             <label><input type="radio" name="rounds" value="รอบ 2 Quota" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">รอบ 2 Quota</span></div></label>
+             <label><input type="radio" name="rounds" value="รอบ 3 Admission" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">รอบ 3 Admission</span></div></label>
           </div>
           <div class="error-text">กรุณาเลือกรอบการรับสมัครที่สนใจ</div>
         </div>
@@ -231,9 +235,9 @@
         <div class="survey-card" id="block_future">
           <p class="font-bold text-slate-800 mb-4 text-lg">13. หากมีกิจกรรมรูปแบบนี้อีกในอนาคต ท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <label><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">สนใจเข้าร่วมแน่นอน</span></div></label>
-            <label><input type="radio" name="future" value="ไม่สนใจเข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">ไม่สนใจเข้าร่วม</span></div></label>
-            <label><input type="radio" name="future" value="ยังไม่แน่ใจ" class="peer sr-only"><div class="choice-card"><div class="choice-box"></div><span class="font-bold text-slate-700">ยังไม่แน่ใจ</span></div></label>
+            <label><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">สนใจเข้าร่วมแน่นอน</span></div></label>
+            <label><input type="radio" name="future" value="ไม่สนใจเข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ไม่สนใจเข้าร่วม</span></div></label>
+            <label><input type="radio" name="future" value="ยังไม่แน่ใจ" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ยังไม่แน่ใจ</span></div></label>
           </div>
           <div class="error-text">กรุณาเลือกหนึ่งคำตอบ</div>
         </div>
@@ -254,39 +258,38 @@
     </form>
   </div>
 
-  <div id="successWrapper" class="hidden max-w-md mx-auto mt-24 text-center px-4">
+  <div id="successWrapper" class="hidden max-w-md mx-auto mt-10 text-center px-4 relative z-10">
      <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 relative">
         <div class="absolute inset-0 bg-emerald-400 rounded-full animate-ping opacity-20"></div>
         <i class="fi fi-sr-check-circle text-5xl text-emerald-500 relative z-10"></i>
      </div>
-     <h2 class="text-3xl font-black text-[#0a2240] mb-2 tracking-tight">บันทึกข้อมูลเรียบร้อย</h2>
-     <p class="text-slate-500 mb-10 font-medium">ราชวิทยาลัยจุฬาภรณ์ขอขอบพระคุณสำหรับความคิดเห็นครับ</p>
+     <h2 class="text-3xl font-black text-white mb-2 tracking-tight">บันทึกข้อมูลเรียบร้อย</h2>
+     <p class="text-cyan-100 mb-10 font-medium">ราชวิทยาลัยจุฬาภรณ์ขอขอบพระคุณสำหรับความคิดเห็นครับ</p>
      
      <div id="certBox" class="mb-10 hidden">
         <a id="certDownloadLink" href="#" target="_blank" class="block group no-underline">
-           <div class="bg-gradient-to-br from-[#0a2240] to-[#0891b2] p-8 rounded-[2rem] text-white shadow-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(8,145,178,0.5)] transition-all duration-300 relative overflow-hidden">
-              <div class="absolute -right-10 -bottom-10 w-40 h-40 border-[20px] border-white/5 rounded-full"></div>
+           <div class="bg-gradient-to-br from-white to-cyan-50 p-8 rounded-[2rem] text-slate-800 shadow-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(8,145,178,0.3)] transition-all duration-300 relative overflow-hidden border border-cyan-100">
+              <div class="absolute -right-10 -bottom-10 w-40 h-40 border-[20px] border-cyan-500/5 rounded-full"></div>
               
-              <i class="fi fi-sr-award text-6xl text-cyan-300 block mb-5 animate-pulse relative z-10"></i>
-              <h3 class="text-2xl font-black text-white mb-2 relative z-10">รับเกียรติบัตร</h3>
-              <p class="text-cyan-100 text-sm font-medium relative z-10">คลิกเพื่อรับ E-Certificate ของท่าน</p>
+              <i class="fi fi-sr-award text-6xl text-amber-500 block mb-5 animate-pulse relative z-10"></i>
+              <h3 class="text-2xl font-black text-[#0a2240] mb-2 relative z-10">รับเกียรติบัตร</h3>
+              <p class="text-cyan-700 text-sm font-bold relative z-10">คลิกเพื่อรับ E-Certificate ของท่าน</p>
            </div>
         </a>
      </div>
 
-     <div id="certNotFound" class="mb-10 hidden p-5 bg-rose-50 border border-rose-200 rounded-2xl">
-        <p class="text-rose-600 font-bold"><i class="fi fi-sr-info text-lg align-middle mr-1"></i> ไม่พบไฟล์เกียรติบัตรในระบบ<br><span class="text-sm font-medium mt-1 block">กรุณาติดต่อทีมงานเพื่อตรวจสอบข้อมูล</span></p>
+     <div id="certNotFound" class="mb-10 hidden p-5 bg-white border border-rose-200 rounded-2xl shadow-lg">
+        <p class="text-rose-600 font-bold"><i class="fi fi-sr-info text-lg align-middle mr-1"></i> ไม่พบไฟล์เกียรติบัตรในระบบ<br><span class="text-sm font-medium mt-1 block text-slate-500">กรุณาติดต่อทีมงานเพื่อตรวจสอบข้อมูล</span></p>
      </div>
   </div>
 
   <script>
-    // ⚠️ ลิงก์ API ล่าสุดของคุณ 
+    // ⚠️ ลิงก์ API ล่าสุด
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZrOesuYN-6AhBxFx7ZBpNkjwgPeMutI3KFuRBZxt6xh7Ka-KJi4CwMq_N1E-kyaEUAQ/exec";
     
     let isVerified = false;
     let verifiedNameStr = "";
 
-    // ข้อมูลหลักสูตร P1
     const programsList = [
       "แพทยศาสตรบัณฑิต", "วท.บ. สาขาวิชาวิทยาศาสตร์ข้อมูลสุขภาพ", "พยาบาลศาสตรบัณฑิต", 
       "พยาบาลศาสตรบัณฑิต (หลักสูตรนานาชาติ)", "พยาบาลศาสตรบัณฑิต รับผู้สำเร็จปริญญาตรีสาขาอื่น",
@@ -301,14 +304,13 @@
         <label>
           <input type="checkbox" name="programs" value="${prog}" class="peer sr-only">
           <div class="choice-card !items-start h-full">
-            <div class="choice-box mt-0.5"><svg class="w-3.5 h-3.5 text-white hidden peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+            <div class="choice-box mt-0.5"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
             <span class="font-bold text-slate-600 text-[13px] leading-relaxed peer-checked:text-cyan-800">${prog}</span>
           </div>
         </label>
       `;
     });
 
-    // ล็อกให้เลือกสูงสุด 3 ข้อ 
     document.querySelectorAll('input[name="programs"]').forEach(cb => {
       cb.addEventListener('change', function() {
         const checkedCount = document.querySelectorAll('input[name="programs"]:checked').length;
@@ -458,11 +460,9 @@
           else { scorePayload[fKey] = checkedRadio.value; }
        });
 
-       // ดึงข้อมูลหลักสูตร (บังคับเลือกอย่างน้อย 1)
        const selectedPrograms = Array.from(document.querySelectorAll('input[name="programs"]:checked')).map(cb => cb.value);
        if(selectedPrograms.length === 0) { markError('block_programs'); if(!firstErrNode) firstErrNode = 'block_programs'; }
 
-       // ดึงข้อมูลรอบ
        const roundRadio = document.querySelector('input[name="rounds"]:checked');
        if(!roundRadio) { markError('block_rounds'); if(!firstErrNode) firstErrNode = 'block_rounds'; }
 
@@ -496,8 +496,9 @@
          .then(res => res.json())
          .then(res => {
             if(res.status === 'success') {
-               document.getElementById('formWrapper').style.display = 'none';
-               document.querySelector('.tech-header-bg').style.display = 'none'; // ซ่อนแบคกราวด์เดิม
+               // ซ่อนแค่ตัวฟอร์ม แต่เก็บ Background สีเข้มไว้ เพื่อให้โลโก้และข้อความสีขาวยังดูสวยงาม!
+               document.getElementById('formWrapper').style.display = 'none'; 
+               
                document.getElementById('successWrapper').classList.remove('hidden');
                
                if (roleSelected.value === 'ผู้เข้าร่วม') {
