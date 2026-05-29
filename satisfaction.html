@@ -17,6 +17,7 @@
       overflow-x: hidden;
     }
     
+    /* ธีมพื้นหลังส่วนหัว */
     .tech-header-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 380px; z-index: -1;
       background: linear-gradient(135deg, #0a192f 0%, #004d61 100%);
@@ -25,13 +26,24 @@
     .tech-header-bg::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%); top: -150px; left: -100px; border-radius: 50%; }
     .tech-header-bg::after { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); bottom: -200px; right: -100px; border-radius: 50%; }
 
+    /* การ์ดคำถามมาตรฐาน */
     .survey-card {
       background: #ffffff; border-radius: 1.5rem; padding: 1.75rem; margin-bottom: 1.25rem;
-      border: 1px solid #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03); transition: all 0.3s ease;
+      border: 1px solid #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03); transition: all 0.2s ease;
     }
     .survey-card:hover { border-color: #cffafe; box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.08); }
     .survey-card.has-error { border-color: #fca5a5; background-color: #fef2f2; animation: shake 0.4s ease-in-out; }
 
+    /* การ์ดสีเหลืองทองสำหรับคะแนนภาพรวม */
+    .gold-survey-card {
+      background: #ffffff; border-radius: 1.5rem; padding: 1.75rem; margin-bottom: 1.25rem;
+      border: 2px solid #fbbf24; box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.1); transition: all 0.2s ease;
+      background-image: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    }
+    .gold-survey-card:hover { box-shadow: 0 15px 35px -5px rgba(251, 191, 36, 0.2); }
+    .gold-survey-card.has-error { border-color: #ef4444; background-color: #fef2f2; animation: shake 0.4s ease-in-out; }
+
+    /* Input สไตล์ Modern */
     .input-wrapper { position: relative; width: 100%; }
     .input-icon { position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem; pointer-events: none; transition: 0.3s; }
     .modern-input {
@@ -42,39 +54,48 @@
     .modern-input:focus + .input-icon { color: #06b6d4; }
     .modern-input:read-only { background: #f8fafc; color: #94a3b8; }
 
-    /* แก้ไขปุ่มคะแนน 1-5 แบบเร่งสปีด (ลบ Shadow หน่วงๆ ออก และใช้หน่วยฮาร์ดแวร์ประมวลผลแทน) */
+    /* ปุ่มคะแนน 1-5 แบบติ๊กถูกกดปุ๊บติดปั๊บ (ไม่มีอนิเมชันหน่วงเวลา ไวเท่าปุ่ม Google Forms) */
     .rating-circle {
       width: 3rem; height: 3rem; border-radius: 50%; background-color: #f1f5f9; color: #64748b;
       display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
       border: 2px solid transparent; margin: 0 auto;
-      transition: transform 0.1s ease-out, background-color 0.1s ease-out, color 0.1s ease-out;
-      will-change: transform;
+      transition: none; /* ปิดการหน่วงเวลาทั้งหมดเพื่อให้ติดปั๊บ */
     }
     .peer:checked + .rating-circle {
-      background-color: #0891b2; color: white; transform: scale(1.08);
-      border-color: transparent;
+      background-color: #0891b2; color: white; transform: scale(1.05); border-color: transparent;
     }
-    .peer:hover + .rating-circle { border-color: #a5f3fc; color: #0891b2; }
+    
+    /* สไตล์ปุ่มคะแนนสำหรับข้อสีทองเพื่อความเข้าธีม */
+    .gold-rating-circle {
+      width: 3rem; height: 3rem; border-radius: 50%; background-color: #f1f5f9; color: #64748b;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
+      border: 2px solid transparent; margin: 0 auto;
+      transition: none;
+    }
+    .peer:checked + .gold-rating-circle {
+      background-color: #d97706; color: white; transform: scale(1.05); border-color: transparent; /* สีเหลืองทองเข้ม */
+    }
 
+    /* Checkbox & Radio Card */
     .choice-card {
       display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 1rem;
-      background-color: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: all 0.15s ease-out; height: 100%;
+      background-color: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: none; height: 100%;
     }
     .choice-card:hover { background-color: #f1f5f9; }
-    .peer:checked + .choice-card { background-color: #ecfeff; border-color: #06b6d4; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.1); }
+    .peer:checked + .choice-card { background-color: #ecfeff; border-color: #06b6d4; }
     
     .choice-box {
       width: 22px; height: 22px; border-radius: 6px; border: 2px solid #cbd5e1; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; transition: all 0.15s ease-out; background-color: white;
+      display: flex; align-items: center; justify-content: center; background-color: white; transition: none;
     }
     .peer[type="radio"] + .choice-card .choice-box { border-radius: 50%; }
     .peer:checked + .choice-card .choice-box { background-color: #0891b2; border-color: #0891b2; }
 
-    .check-icon { color: #e2e8f0; transition: color 0.15s ease-out; }
+    .check-icon { color: #e2e8f0; }
     .peer:checked + .choice-card .check-icon { color: #ffffff; }
 
     .error-text { color: #ef4444; font-size: 0.85rem; font-weight: 700; margin-top: 10px; display: none; }
-    .survey-card.has-error .error-text { display: block; }
+    .survey-card.has-error .error-text, .gold-survey-card.has-error .error-text { display: block; }
     
     .loader { border: 3px solid #e2e8f0; border-radius: 50%; border-top: 3px solid #06b6d4; width: 22px; height: 22px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -169,15 +190,16 @@
         </div>
 
         <script>
-          function createScale(name) {
+          function createScale(name, isGold = false) {
             const labels = ["น้อยที่สุด", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"];
+            const circleClass = isGold ? "gold-rating-circle" : "rating-circle";
             let html = '<div class="flex justify-between items-end mt-5 pt-5 border-t border-slate-100 gap-1 sm:gap-2">';
             for(let i=1; i<=5; i++) {
               html += `
                 <label class="flex flex-col items-center gap-2 cursor-pointer group flex-1">
                   <input type="radio" name="${name}" value="${i}" class="peer sr-only">
-                  <div class="rating-circle">${i}</div>
-                  <span class="text-[10px] sm:text-[12px] font-bold text-slate-400 peer-checked:text-cyan-600 text-center transition-colors">${labels[i-1]}</span>
+                  <div class="${circleClass}">${i}</div>
+                  <span class="text-[10px] sm:text-[12px] font-bold text-slate-400 peer-checked:text-cyan-600 text-center">${labels[i-1]}</span>
                 </label>
               `;
             }
@@ -204,7 +226,7 @@
           <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
         </div>
 
-        <div class="survey-card border-l-4 border-l-cyan-500 bg-cyan-50/10" id="block_scoreG">
+        <div class="survey-card" id="block_scoreG">
           <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">5. ความพึงพอใจต่อการบรรยายพิเศษ: ปลดล็อกความคิดสร้างสรรค์ ปั้นนวัตกรรมเปลี่ยนโลก <span class="text-red-500">*</span></p>
           <script>document.write(createScale('scoreG'));</script>
           <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
@@ -240,13 +262,13 @@
           <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
         </div>
 
-        <div class="survey-card border-2 border-cyan-100 bg-cyan-50/30" id="block_scoreM">
+        <div class="gold-survey-card" id="block_scoreM">
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-black tracking-wider uppercase">Overview</span>
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-black tracking-wider uppercase"><i class="fi fi-sr-star mr-1"></i> โซนสำคัญที่สุด</span>
           </div>
-          <p class="font-black text-[#0a2240] text-xl leading-relaxed">11. ภาพรวมกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
-          <script>document.write(createScale('scoreM'));</script>
-          <div class="error-text">กรุณาให้คะแนนภาพรวมกิจกรรม</div>
+          <p class="font-black text-amber-900 text-xl leading-relaxed">11. ภาพรวมกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreM', true));</script>
+          <div class="error-text">กรุณาให้คะแนนภาพรวมกิจกรรมด้วยครับ</div>
         </div>
 
         <div class="my-8 px-2 flex items-center gap-3 border-t border-slate-200 pt-8">
@@ -324,7 +346,6 @@
   </div>
 
   <script>
-    // อัปเดตลิงก์ Web App URL ตัวใหม่ล่าสุดเรียบร้อยแล้วครับ
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZrOesuYN-6AhBxFx7ZBpNkjwgPeMutI3KFuRBZxt6xh7Ka-KJi4CwMq_N1E-kyaEUAQ/exec";
     
     let isVerified = false;
@@ -466,7 +487,7 @@
     }
 
     function executeSubmit() {
-       document.querySelectorAll('.survey-card').forEach(b => b.classList.remove('has-error'));
+       document.querySelectorAll('.survey-card, .gold-survey-card').forEach(b => b.classList.remove('has-error'));
        let firstErrNode = null;
 
        const roleSelected = document.querySelector('input[name="role"]:checked');
@@ -492,7 +513,6 @@
           }
        }
 
-       // ตรวจเช็คฟิลด์คะแนน D ถึง M (เพิ่มคะแนนข้อ G เข้ามาในลูปตรวจสอบ)
        const rateFields = ['scoreD', 'scoreE', 'scoreF', 'scoreG', 'scoreH', 'scoreI', 'scoreJ', 'scoreK', 'scoreL', 'scoreM'];
        const scorePayload = {};
        rateFields.forEach(fKey => {
@@ -572,7 +592,7 @@
     function markError(id) { document.getElementById(id).classList.add('has-error'); }
 
     document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
-       input.addEventListener('change', function() { this.closest('.survey-card').classList.remove('has-error'); });
+       input.addEventListener('change', function() { this.closest('.survey-card, .gold-survey-card').classList.remove('has-error'); });
     });
     document.getElementById('manualName').addEventListener('input', function() { this.closest('.survey-card').classList.remove('has-error'); });
   </script>
