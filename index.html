@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRA Think Share 2026</title>
+  <title>CRA Think Share 2026 - แบบประเมินความพึงพอใจ</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
@@ -35,22 +35,14 @@
       font-size:.8rem; font-weight:700; letter-spacing:.02em;
     }
     .btn-primary{
-      width:100%; height:58px; border:none; border-radius:20px; background:linear-gradient(135deg,#ff6b00,#ff8a00);
-      color:white; font-weight:800; font-size:1.05rem; cursor:pointer; transition:.3s; box-shadow:0 10px 30px rgba(255,107,0,.25);
+      width:100%; height:64px; border:none; border-radius:20px; background:linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:white; font-weight:800; font-size:1.15rem; cursor:pointer; transition:.3s; box-shadow:0 10px 30px rgba(37,99,235,.3);
     }
-    .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,107,0,.35); }
-    .btn-disabled {
-      width:100%; height:58px; border:none; border-radius:20px; background:#e2e8f0;
-      color:#94a3b8; font-weight:800; font-size:1.05rem; cursor:not-allowed; box-shadow:none;
-    }
-    .btn-outline {
-      width:100%; height:58px; border:2px solid #0f172a; border-radius:20px; background:transparent;
-      color:#0f172a; font-weight:800; font-size:1.05rem; cursor:pointer; transition:.3s;
-    }
-    .btn-outline:hover { background:#0f172a; color:white; transform:translateY(-2px); box-shadow:0 10px 20px rgba(15,23,42,.15); }
-    .mini-card{ background:#f8fafc; border:1px solid #e2e8f0; border-radius:24px; padding:1.2rem; }
+    .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 18px 40px rgba(37,99,235,.4); background:linear-gradient(135deg,#1d4ed8,#1e3a8a); }
+    
+    .mini-card{ background:#f8fafc; border:1px solid #e2e8f0; border-radius:24px; padding:1.2rem; transition:all 0.3s ease; }
+    .mini-card:hover{ border-color:#93c5fd; background:#eff6ff; }
     .icon-box{ width:54px; height:54px; border-radius:18px; background:white; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0; color:#2563eb; flex-shrink:0; }
-    .hero-title{ line-height:.92; letter-spacing:-0.05em; }
     @media(max-width:900px){ .main-grid{ grid-template-columns:1fr !important; } .left-panel{ min-height:340px; } }
   </style>
 </head>
@@ -62,11 +54,12 @@
 
 <div class="main-card grid grid-cols-2 main-grid relative z-10">
 
+  <!-- โซนด้านซ้าย (หน้าปกงาน) -->
   <div class="left-panel p-10 lg:p-14 flex flex-col justify-between">
     <div class="relative z-10">
       <div class="flex flex-wrap gap-3 mb-8">
-        <div class="badge"><i class="fi fi-sr-users"></i> จำกัด 200 ที่นั่ง</div>
-        <div class="badge"><i class="fi fi-sr-ticket"></i> ฟรี ไม่มีค่าใช้จ่าย</div>
+        <div class="badge text-emerald-400"><i class="fi fi-sr-check-circle"></i> กิจกรรมเสร็จสิ้นแล้ว</div>
+        <div class="badge"><i class="fi fi-sr-document-signed"></i> เปิดรับแบบประเมิน</div>
       </div>
       <p class="uppercase tracking-[0.3em] text-sky-300 text-xs font-bold mb-5">CHULABHORN ROYAL ACADEMY</p>
       
@@ -89,77 +82,53 @@
     </div>
   </div>
 
+  <!-- โซนด้านขวา (ปุ่มแบบสอบถาม) -->
   <div class="p-8 lg:p-14 flex flex-col justify-center">
     <div class="max-w-md mx-auto w-full">
 
       <div class="mb-8">
-        <div class="w-16 h-16 rounded-2xl bg-orange-100 text-orange-500 flex items-center justify-center mb-5">
-          <i class="fi fi-sr-bulb text-3xl mt-1"></i>
+        <div class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-5">
+          <i class="fi fi-sr-star text-3xl mt-1"></i>
         </div>
-        <h2 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-3">พร้อมหรือยัง?</h2>
-        <p class="text-slate-500 leading-relaxed font-medium">ลงทะเบียนเข้าร่วมกิจกรรม CRA Think Share 2026 เพื่อเปิดประสบการณ์ด้านนวัตกรรมและแรงบันดาลใจใหม่ ๆ</p>
+        <h2 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight mb-3">ขอบคุณที่เข้าร่วมกิจกรรม 🎉</h2>
+        <p class="text-slate-500 leading-relaxed font-medium">เพื่อการพัฒนาและปรับปรุงการจัดกิจกรรมในครั้งต่อไป ราชวิทยาลัยจุฬาภรณ์ขอความอนุเคราะห์ท่านตอบแบบประเมินความพึงพอใจ</p>
       </div>
 
-      <div class="mb-6 p-5 rounded-3xl bg-slate-50 border border-slate-200 relative overflow-hidden shadow-sm">
-        <div class="flex justify-between items-end mb-3 relative z-10">
-          <div>
-            <div class="flex items-center gap-2 mb-1.5">
-              <div class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">ยอดลงทะเบียนแล้ว</div>
-              <div id="remainingBadge" class="px-2.5 py-1 rounded-md bg-slate-200 text-slate-500 text-[10px] font-bold">กำลังโหลด...</div>
-            </div>
-            <div class="flex items-baseline gap-1.5">
-              <div class="text-4xl font-black text-slate-800 leading-none" id="seatCountText">
-                <i class="fi fi-sr-spinner animate-spin text-2xl text-blue-500"></i>
-              </div>
-              <div class="text-sm font-bold text-slate-400 mb-1">/ 200 ที่นั่ง</div>
-            </div>
-          </div>
-        </div>
-        <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden relative z-10">
-          <div id="seatProgressBar" class="h-full w-0 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-1000 ease-out"></div>
-        </div>
-      </div>
-
-      <div class="mb-6 p-1 rounded-3xl bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-400 shadow-lg shadow-orange-500/20">
+      <!-- กล่องแจ้งเตือนเกียรติบัตร -->
+      <div class="mb-8 p-1 rounded-3xl bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 shadow-lg shadow-blue-500/20">
         <div class="bg-white rounded-[20px] p-4 flex items-center gap-4 relative overflow-hidden h-full">
-          <div class="absolute -right-2 -top-2 text-orange-50 opacity-60">
+          <div class="absolute -right-2 -top-2 text-blue-50 opacity-60">
             <i class="fi fi-sr-award text-8xl"></i>
           </div>
-          <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-md relative z-10 animate-bounce" style="animation-duration: 2.5s;">
+          <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-md relative z-10 animate-pulse" style="animation-duration: 2.5s;">
             <i class="fi fi-sr-award text-2xl mt-1"></i>
           </div>
           <div class="relative z-10">
             <div class="text-[1.1rem] lg:text-[1.15rem] font-black text-slate-800 tracking-tight leading-tight mb-0.5">
               รับใบประกาศนียบัตร 🎓
             </div>
-            <div class="text-orange-600 font-extrabold text-[14px]">
-              รับทันทีหลังจบกิจกรรม!
+            <div class="text-blue-600 font-extrabold text-[14px]">
+              รับ E-Certificate ทันทีหลังทำแบบประเมิน
             </div>
           </div>
         </div>
       </div>
 
       <div class="space-y-4">
-        <a href="register.html" class="block no-underline" id="regLink">
-          <button id="regBtn" class="btn-primary flex justify-center items-center gap-2">
-            <i class="fi fi-sr-rocket-lunch mt-1"></i> ลงทะเบียนเข้าร่วมกิจกรรม
+        <!-- ปุ่มไปหน้าแบบสอบถาม -->
+        <a href="satisfaction.html" class="block no-underline">
+          <button class="btn-primary flex justify-center items-center gap-2">
+            <i class="fi fi-sr-clipboard-list-check mt-1 text-xl"></i> ทำแบบประเมินความพึงพอใจ
           </button>
         </a>
 
+        <!-- กล่องข้อมูลเพิ่มเติม -->
         <div class="mini-card flex items-start gap-4">
-          <div class="icon-box"><i class="fi fi-sr-graduation-cap mt-1 text-xl"></i></div>
+          <div class="icon-box"><i class="fi fi-sr-users-alt mt-1 text-xl"></i></div>
           <div>
-            <div class="font-bold text-slate-800 mb-1">สำหรับนักเรียน ม.4 - ม.6</div>
-            <div class="text-slate-500 text-sm leading-relaxed font-medium">รับจำนวนจำกัด พร้อมกิจกรรม workshop และ sharing session</div>
+            <div class="font-bold text-slate-800 mb-1">สำหรับทุกท่านที่เข้าร่วมงาน</div>
+            <div class="text-slate-500 text-sm leading-relaxed font-medium">ทั้งนักเรียนผู้เข้าร่วมโครงการ วิทยากร คณะทำงาน และบุคคลทั่วไป</div>
           </div>
-        </div>
-
-        <div class="pt-2">
-          <a href="check.html" class="block no-underline">
-            <button class="btn-outline flex justify-center items-center gap-2">
-              <i class="fi fi-sr-search-alt mt-1"></i> ตรวจสอบรายชื่อและรหัส STU
-            </button>
-          </a>
         </div>
 
       </div>
@@ -169,62 +138,5 @@
 
 </div>
 
-<script>
-  // API URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb95U9rbflq0JreqtjUyYSYtYcpOtc3F4y7IGJI0ek0X4XcUEl4nicEPtTyRyPanpJcg/exec";
-
-  window.onload = function() {
-    fetch(SCRIPT_URL + "?action=getSeats")
-      .then(response => response.json())
-      .then(data => updateDashboard(data))
-      .catch(error => console.error('Error fetching seats:', error));
-  };
-
-  function updateDashboard(data) {
-    const remaining = data.remaining; 
-    const total = data.total; 
-    const used = total - remaining; 
-    const percent = (used / total) * 100; 
-
-    const countText = document.getElementById('seatCountText');
-    const progressBar = document.getElementById('seatProgressBar');
-    const remainingBadge = document.getElementById('remainingBadge');
-    const regBtn = document.getElementById('regBtn');
-    const regLink = document.getElementById('regLink');
-
-    countText.innerText = used;
-    progressBar.style.width = percent + '%';
-    
-    if(remaining > 0) {
-      remainingBadge.innerText = 'เหลือว่างอีก ' + remaining + ' ที่นั่ง';
-    } else {
-      remainingBadge.innerText = 'ที่นั่งเต็มแล้ว!';
-    }
-
-    if(percent >= 90) { 
-       progressBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full transition-all duration-1000 ease-out';
-       remainingBadge.className = 'px-2.5 py-1 rounded-md bg-red-100 text-red-600 text-[11px] font-bold';
-       countText.classList.add('text-red-500');
-    } else if (percent >= 50) { 
-       progressBar.className = 'h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-1000 ease-out';
-       remainingBadge.className = 'px-2.5 py-1 rounded-md bg-blue-100 text-blue-600 text-[11px] font-bold';
-    } else { 
-       progressBar.className = 'h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-1000 ease-out';
-       remainingBadge.className = 'px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-600 text-[11px] font-bold';
-    }
-
-    if(remaining <= 0) {
-      countText.classList.replace('text-red-500', 'text-red-600');
-      progressBar.style.width = '100%';
-      
-      regBtn.innerHTML = '<i class="fi fi-sr-lock mt-1"></i> ยอดลงทะเบียนเต็มแล้ว';
-      regBtn.className = 'btn-disabled flex justify-center items-center gap-2';
-      regBtn.disabled = true;
-      
-      regLink.href = "javascript:void(0)";
-      regLink.style.cursor = "not-allowed";
-    }
-  }
-</script>
 </body>
 </html>
