@@ -17,7 +17,6 @@
       overflow-x: hidden;
     }
     
-    /* ธีมพื้นหลังส่วนหัว */
     .tech-header-bg {
       position: absolute; top: 0; left: 0; width: 100%; height: 380px; z-index: -1;
       background: linear-gradient(135deg, #0a192f 0%, #004d61 100%);
@@ -26,7 +25,6 @@
     .tech-header-bg::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%); top: -150px; left: -100px; border-radius: 50%; }
     .tech-header-bg::after { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); bottom: -200px; right: -100px; border-radius: 50%; }
 
-    /* การ์ดคำถาม */
     .survey-card {
       background: #ffffff; border-radius: 1.5rem; padding: 1.75rem; margin-bottom: 1.25rem;
       border: 1px solid #ffffff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03); transition: all 0.3s ease;
@@ -34,7 +32,6 @@
     .survey-card:hover { border-color: #cffafe; box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.08); }
     .survey-card.has-error { border-color: #fca5a5; background-color: #fef2f2; animation: shake 0.4s ease-in-out; }
 
-    /* Input สไตล์ Modern */
     .input-wrapper { position: relative; width: 100%; }
     .input-icon { position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem; pointer-events: none; transition: 0.3s; }
     .modern-input {
@@ -45,20 +42,20 @@
     .modern-input:focus + .input-icon { color: #06b6d4; }
     .modern-input:read-only { background: #f8fafc; color: #94a3b8; }
 
-    /* ปุ่มคะแนน 1-5 (แก้ปัญหาความหน่วง ใช้ Solid Color และเร่ง Transition) */
+    /* แก้ไขปุ่มคะแนน 1-5 แบบเร่งสปีด (ลบ Shadow หน่วงๆ ออก และใช้หน่วยฮาร์ดแวร์ประมวลผลแทน) */
     .rating-circle {
       width: 3rem; height: 3rem; border-radius: 50%; background-color: #f1f5f9; color: #64748b;
       display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem;
       border: 2px solid transparent; margin: 0 auto;
-      transition: transform 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out, box-shadow 0.15s ease-out;
+      transition: transform 0.1s ease-out, background-color 0.1s ease-out, color 0.1s ease-out;
+      will-change: transform;
     }
     .peer:checked + .rating-circle {
-      background-color: #0891b2; color: white; transform: scale(1.1) translateY(-2px);
-      box-shadow: 0 8px 16px -4px rgba(8, 145, 178, 0.4); border-color: transparent;
+      background-color: #0891b2; color: white; transform: scale(1.08);
+      border-color: transparent;
     }
     .peer:hover + .rating-circle { border-color: #a5f3fc; color: #0891b2; }
 
-    /* Checkbox & Radio Card (ลดความหน่วง) */
     .choice-card {
       display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 1rem;
       background-color: #f8fafc; border: 2px solid transparent; cursor: pointer; transition: all 0.15s ease-out; height: 100%;
@@ -73,7 +70,6 @@
     .peer[type="radio"] + .choice-card .choice-box { border-radius: 50%; }
     .peer:checked + .choice-card .choice-box { background-color: #0891b2; border-color: #0891b2; }
 
-    /* แก้ปัญหาไอคอนติ๊กถูกดูโล่งๆ ให้มีสีเทาจางๆ เวลายังไม่ติ๊ก */
     .check-icon { color: #e2e8f0; transition: color 0.15s ease-out; }
     .peer:checked + .choice-card .check-icon { color: #ffffff; }
 
@@ -143,7 +139,7 @@
           <div id="confirmIdentityBox" class="hidden mt-5 p-5 rounded-2xl bg-cyan-50 border border-cyan-100 text-center">
             <p class="font-bold text-slate-700 mb-4">ชื่อของคุณคือ <span id="lblStudentName" class="text-cyan-700 text-lg font-black bg-white px-3 py-1 rounded-lg border border-cyan-200 ml-1"></span> ใช่หรือไม่?</p>
             <div class="flex justify-center gap-3">
-               <button type="button" onclick="actionVerify(true)" class="px-6 py-2.5 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 hover:shadow-lg hover:-translate-y-0.5 transition-all">ใช่, ถูกต้อง</button>
+               <button type="button" onclick="actionVerify(true)" class="px-6 py-2.5 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 transition-all">ใช่, ถูกต้อง</button>
                <button type="button" onclick="actionVerify(false)" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-all">ไม่ใช่</button>
             </div>
           </div>
@@ -168,7 +164,7 @@
           <div class="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600"><i class="fi fi-sr-star text-lg mt-0.5"></i></div>
           <div>
              <h2 class="text-xl font-black text-[#0a2240]">ส่วนที่ 2: ความพึงพอใจต่อกิจกรรม</h2>
-             <p class="text-sm font-bold text-cyan-600">โปรดให้คะแนนตามระดับความพึงพอใจ</p>
+             <p class="text-sm font-bold text-cyan-600">โปรดให้คะแนนตามระดับความพึงพอใจ (5 = มากที่สุด | 1 = น้อยที่สุด)</p>
           </div>
         </div>
 
@@ -190,32 +186,77 @@
           }
         </script>
 
-        <div class="survey-card" id="block_scoreD"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">2. นิทรรศการงานประกวดนวัตกรรมและสิ่งประดิษฐ์ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreD'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreE"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">3. บรรยายพิเศษ: บทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreE'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreF"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">4. ปาฐกถาพิเศษ: การวางรากฐานสู่ประเทศรายได้สูงฯ <span class="text-red-500">*</span></p><script>document.write(createScale('scoreF'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreG"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">5. บรรยายพิเศษ: AICEDA ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย <span class="text-red-500">*</span></p><script>document.write(createScale('scoreG'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreH"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">6. บรรยายพิเศษ: Pitching Idea 101 ไอเดียปัง ทุนวิจัยพุ่ง! <span class="text-red-500">*</span></p><script>document.write(createScale('scoreH'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreI"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">7. บรรยายพิเศษ: AI & Me คู่หูสร้างสรรค์ผลงานยุคดิจิทัล <span class="text-red-500">*</span></p><script>document.write(createScale('scoreI'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreJ"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">8. บรรยายพิเศษ: We are Innovator จุดประกายนวัตกร <span class="text-red-500">*</span></p><script>document.write(createScale('scoreJ'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
-        <div class="survey-card" id="block_scoreK"><p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">9. กิจกรรม Workshop : We are Innovator <span class="text-red-500">*</span></p><script>document.write(createScale('scoreK'));</script><div class="error-text">กรุณาให้คะแนนข้อนี้</div></div>
+        <div class="survey-card" id="block_scoreD">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">2. ความพึงพอใจงานนิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์ <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreD'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
 
-        <div class="survey-card border-2 border-cyan-100 bg-cyan-50/30" id="block_scoreL">
+        <div class="survey-card" id="block_scoreE">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">3. ความพึงพอใจต่อกิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreE'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreF">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">4. ความพึงพอใจปาฐกถาพิเศษ "การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี" <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreF'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card border-l-4 border-l-cyan-500 bg-cyan-50/10" id="block_scoreG">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">5. ความพึงพอใจต่อการบรรยายพิเศษ: ปลดล็อกความคิดสร้างสรรค์ ปั้นนวัตกรรมเปลี่ยนโลก <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreG'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreH">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">6. ความพึงพอใจบรรยายพิเศษ "AICEDA: ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก" <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreH'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreI">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">7. ความพึงพอใจบรรยายพิเศษ "Pitching Idea 101: ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้)" <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreI'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreJ">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">8. ความพึงพอใจบรรยายพิเศษ "AI & Me: คู่หูสร้างสรรค์ผลงานยุคดิจิทัล" <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreJ'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreK">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">9. ความพึงพอใจบรรยายพิเศษ "We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR" <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreK'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card" id="block_scoreL">
+          <p class="font-bold text-slate-800 leading-relaxed text-[1.05rem]">10. ความพึงพอใจกิจกรรม Workshop : We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreL'));</script>
+          <div class="error-text">กรุณาให้คะแนนข้อนี้</div>
+        </div>
+
+        <div class="survey-card border-2 border-cyan-100 bg-cyan-50/30" id="block_scoreM">
           <div class="flex items-center gap-2 mb-2">
             <span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-black tracking-wider uppercase">Overview</span>
           </div>
-          <p class="font-black text-[#0a2240] text-xl leading-relaxed">10. ให้คะแนนภาพรวมของกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
-          <script>document.write(createScale('scoreL'));</script>
-          <div class="error-text">กรุณาให้คะแนนภาพรวม</div>
+          <p class="font-black text-[#0a2240] text-xl leading-relaxed">11. ภาพรวมกิจกรรมทั้งหมด <span class="text-red-500">*</span></p>
+          <script>document.write(createScale('scoreM'));</script>
+          <div class="error-text">กรุณาให้คะแนนภาพรวมกิจกรรม</div>
         </div>
 
         <div class="my-8 px-2 flex items-center gap-3 border-t border-slate-200 pt-8">
            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><i class="fi fi-sr-graduation-cap text-lg mt-0.5"></i></div>
-           <h2 class="text-xl font-black text-[#0a2240]">ส่วนที่ 3: ข้อมูลการศึกษาต่อ</h2>
+           <h2 class="text-xl font-black text-[#0a2240]">ส่วนที่ 3: ข้อมูลแผนการศึกษา</h2>
         </div>
 
         <div class="survey-card" id="block_programs">
           <div class="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-             <p class="font-bold text-slate-800 text-lg">11. หลักสูตรใดที่ท่านสนใจมากที่สุด <span class="text-red-500">*</span></p>
+             <p class="font-bold text-slate-800 text-lg">12. หลักสูตรที่ท่านสนใจอยากศึกษา <span class="text-red-500">*</span></p>
              <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-100 text-center">เลือกได้สูงสุด 3 ข้อ</span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="programOptions"></div>
@@ -223,7 +264,7 @@
         </div>
 
         <div class="survey-card" id="block_rounds">
-          <p class="font-bold text-slate-800 text-lg mb-4">12. รอบการรับสมัครที่ท่านสนใจมากที่สุด <span class="text-red-500">*</span></p>
+          <p class="font-bold text-slate-800 text-lg mb-4">13. รอบการรับสมัครที่ท่านสนใจ <span class="text-red-500">*</span></p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
              <label><input type="radio" name="rounds" value="รอบ 1 Portfolio" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">รอบ 1 Portfolio</span></div></label>
              <label><input type="radio" name="rounds" value="รอบ 2 Quota" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">รอบ 2 Quota</span></div></label>
@@ -233,7 +274,7 @@
         </div>
 
         <div class="survey-card" id="block_future">
-          <p class="font-bold text-slate-800 mb-4 text-lg">13. หากมีกิจกรรมรูปแบบนี้อีกในอนาคต ท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></p>
+          <p class="font-bold text-slate-800 mb-4 text-lg">14. หากมีกิจกรรมรูปแบบนี้อีกในอนาคตท่านสนใจเข้าร่วมหรือไม่ <span class="text-red-500">*</span></p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <label><input type="radio" name="future" value="สนใจเข้าร่วมแน่นอน" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">สนใจเข้าร่วมแน่นอน</span></div></label>
             <label><input type="radio" name="future" value="ไม่สนใจเข้าร่วม" class="peer sr-only"><div class="choice-card"><div class="choice-box"><svg class="w-3.5 h-3.5 check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><span class="font-bold text-slate-700">ไม่สนใจเข้าร่วม</span></div></label>
@@ -243,9 +284,9 @@
         </div>
 
         <div class="survey-card">
-          <p class="font-bold text-slate-800 mb-3 text-lg">ข้อเสนอแนะอื่น ๆ เพิ่มเติม</p>
+          <p class="font-bold text-slate-800 mb-3 text-lg">ข้อเสนอแนะอื่น ๆ</p>
           <div class="input-wrapper">
-             <textarea id="txtSuggestions" rows="3" class="modern-input !rounded-2xl" placeholder="คำติชม หรือสิ่งที่อยากให้เพิ่ม..."></textarea>
+             <textarea id="txtSuggestions" rows="3" class="modern-input !rounded-2xl" placeholder="คำติชม หรือข้อเสนอแนะเพิ่มเติม..."></textarea>
              <i class="fi fi-sr-comment-alt input-icon !top-6"></i>
           </div>
         </div>
@@ -270,7 +311,6 @@
         <a id="certDownloadLink" href="#" target="_blank" class="block group no-underline">
            <div class="bg-gradient-to-br from-white to-cyan-50 p-8 rounded-[2rem] text-slate-800 shadow-2xl hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(8,145,178,0.3)] transition-all duration-300 relative overflow-hidden border border-cyan-100">
               <div class="absolute -right-10 -bottom-10 w-40 h-40 border-[20px] border-cyan-500/5 rounded-full"></div>
-              
               <i class="fi fi-sr-award text-6xl text-amber-500 block mb-5 animate-pulse relative z-10"></i>
               <h3 class="text-2xl font-black text-[#0a2240] mb-2 relative z-10">รับเกียรติบัตร</h3>
               <p class="text-cyan-700 text-sm font-bold relative z-10">คลิกเพื่อรับ E-Certificate ของท่าน</p>
@@ -284,7 +324,7 @@
   </div>
 
   <script>
-    // ⚠️ ลิงก์ API ล่าสุด
+    // อัปเดตลิงก์ Web App URL ตัวใหม่ล่าสุดเรียบร้อยแล้วครับ
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZrOesuYN-6AhBxFx7ZBpNkjwgPeMutI3KFuRBZxt6xh7Ka-KJi4CwMq_N1E-kyaEUAQ/exec";
     
     let isVerified = false;
@@ -452,7 +492,8 @@
           }
        }
 
-       const rateFields = ['scoreD', 'scoreE', 'scoreF', 'scoreG', 'scoreH', 'scoreI', 'scoreJ', 'scoreK', 'scoreL'];
+       // ตรวจเช็คฟิลด์คะแนน D ถึง M (เพิ่มคะแนนข้อ G เข้ามาในลูปตรวจสอบ)
+       const rateFields = ['scoreD', 'scoreE', 'scoreF', 'scoreG', 'scoreH', 'scoreI', 'scoreJ', 'scoreK', 'scoreL', 'scoreM'];
        const scorePayload = {};
        rateFields.forEach(fKey => {
           const checkedRadio = document.querySelector(`input[name="${fKey}"]:checked`);
@@ -483,9 +524,16 @@
           role: roleSelected.value,
           tsCode: roleSelected.value === 'ผู้เข้าร่วม' ? document.getElementById('tsCode').value : '',
           fullName: finalFullName,
-          scoreD: scorePayload.scoreD, scoreE: scorePayload.scoreE, scoreF: scorePayload.scoreF,
-          scoreG: scorePayload.scoreG, scoreH: scorePayload.scoreH, scoreI: scorePayload.scoreI,
-          scoreJ: scorePayload.scoreJ, scoreK: scorePayload.scoreK, scoreL: scorePayload.scoreL,
+          scoreD: scorePayload.scoreD, 
+          scoreE: scorePayload.scoreE, 
+          scoreF: scorePayload.scoreF,
+          scoreG: scorePayload.scoreG, 
+          scoreH: scorePayload.scoreH, 
+          scoreI: scorePayload.scoreI,
+          scoreJ: scorePayload.scoreJ, 
+          scoreK: scorePayload.scoreK, 
+          scoreL: scorePayload.scoreL,
+          scoreM: scorePayload.scoreM,
           programs: selectedPrograms.join(', '),
           rounds: roundRadio.value,
           futureInterest: futureRadio.value,
@@ -496,9 +544,7 @@
          .then(res => res.json())
          .then(res => {
             if(res.status === 'success') {
-               // ซ่อนแค่ตัวฟอร์ม แต่เก็บ Background สีเข้มไว้ เพื่อให้โลโก้และข้อความสีขาวยังดูสวยงาม!
                document.getElementById('formWrapper').style.display = 'none'; 
-               
                document.getElementById('successWrapper').classList.remove('hidden');
                
                if (roleSelected.value === 'ผู้เข้าร่วม') {
