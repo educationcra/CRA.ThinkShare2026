@@ -8,6 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['"Noto Sans Thai"', 'sans-serif'] } } }
+    }
+  </script>
   <style>
     body { font-family: 'Noto Sans Thai', sans-serif; background-color: #f1f5f9; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f8fafc; }
@@ -25,6 +30,7 @@
     .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0891b2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+    /* Filter Buttons */
     .filter-btn { transition: all 0.2s; }
     .filter-btn.active-all { background-color: #f1f5f9; border-color: #cbd5e1; color: #334155; }
     .filter-btn.active-attended { background-color: #ecfdf5; border-color: #a7f3d0; color: #059669; }
@@ -36,7 +42,7 @@
   <div id="loading" class="fixed inset-0 bg-white/95 z-[60] flex flex-col items-center justify-center transition-opacity duration-500">
     <div class="loader mb-4"></div>
     <p class="text-cyan-700 font-bold animate-pulse text-xl">กำลังประมวลผลข้อมูล Real-time...</p>
-    <p class="text-sm text-slate-400 mt-2">Connecting to CRA Database...</p>
+    <p class="text-sm text-slate-400 mt-2">Connecting to thinkdata & satisfaction...</p>
   </div>
 
   <div id="mainApp" class="container mx-auto px-4 py-8 max-w-[90rem] opacity-0 transition-opacity duration-700 hidden">
@@ -96,15 +102,21 @@
         <i class="fi fi-sr-clipboard-list text-indigo-500"></i> สรุปข้อมูลพื้นฐานจากผู้ลงทะเบียนทั้งหมด (Registration Data)
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-       <div class="glass-card p-6 md:p-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+       
+       <div class="glass-card p-6 md:p-8 lg:col-span-2">
          <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
-           <i class="fi fi-sr-megaphone text-indigo-500"></i> แหล่งที่ทราบข่าวสารกิจกรรม
+           <i class="fi fi-sr-megaphone text-indigo-500"></i> แหล่งที่ทราบข่าวสารกิจกรรม <span class="text-xs text-slate-400 ml-2 font-medium">(ตอบได้มากกว่า 1 ข้อ)</span>
          </h3>
          <div class="overflow-x-auto border border-slate-100 rounded-xl">
            <table class="w-full text-sm text-left border-collapse">
              <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
-                 <tr><th class="p-3">แหล่งข่าวสาร</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+                 <tr>
+                    <th class="p-4 w-16 text-center">อันดับ</th>
+                    <th class="p-4">แหล่งข่าวสาร</th>
+                    <th class="p-4 text-right w-32">จำนวน</th>
+                    <th class="p-4 text-right w-32">ร้อยละ (%)</th>
+                 </tr>
              </thead>
              <tbody id="sourceTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
            </table>
@@ -118,7 +130,11 @@
          <div class="overflow-x-auto border border-slate-100 rounded-xl">
            <table class="w-full text-sm text-left border-collapse">
              <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
-                 <tr><th class="p-3">สถานะการติดตาม</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+                 <tr>
+                    <th class="p-3">สถานะการติดตาม</th>
+                    <th class="p-3 text-right">จำนวน</th>
+                    <th class="p-3 text-right">ร้อยละ (%)</th>
+                 </tr>
              </thead>
              <tbody id="followTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
            </table>
@@ -132,7 +148,11 @@
          <div class="overflow-x-auto border border-slate-100 rounded-xl">
            <table class="w-full text-sm text-left border-collapse">
              <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
-                 <tr><th class="p-3">แพลตฟอร์ม</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+                 <tr>
+                    <th class="p-3">แพลตฟอร์ม</th>
+                    <th class="p-3 text-right">จำนวน</th>
+                    <th class="p-3 text-right">ร้อยละ (%)</th>
+                 </tr>
              </thead>
              <tbody id="platformTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
            </table>
@@ -197,7 +217,7 @@
          <div class="overflow-x-auto border border-slate-100 rounded-xl">
            <table class="w-full text-sm text-left border-collapse min-w-[400px]">
              <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
-                 <tr><th class="p-3 w-16 text-center">อันดับ</th><th class="p-3">หลักสูตร</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+                 <tr><th class="p-3 w-16 text-center">อันดับ</th><th class="p-3">หลักสูตร</th><th class="p-3 text-right w-24">จำนวน</th><th class="p-3 text-right w-24">ร้อยละ (%)</th></tr>
              </thead>
              <tbody id="currTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
            </table>
@@ -307,10 +327,10 @@
       // ============================================
       const totalReg = REG_DATA.length;
       
-      // ดึงข้อมูลตาราง 3 กล่องสำหรับ Registration
-      renderDataTable('sourceTableBody', getCounts(REG_DATA, 7), totalReg);
+      // ดึงข้อมูลตาราง 3 กล่องสำหรับ Registration (ใช้โหมด Multi-select=true สำหรับข้อแหล่งข่าวสาร Index 7)
+      renderRankedTable('sourceTableBody', getCounts(REG_DATA, 7, true), totalReg);
       renderDataTable('followTableBody', getCounts(REG_DATA, 8), totalReg);
-      renderDataTable('platformTableBody', getCounts(REG_DATA, 9, true), totalReg); // ใช้โหมด Multi-select
+      renderDataTable('platformTableBody', getCounts(REG_DATA, 9, true), totalReg);
 
       // จัดการระบบเช็คชื่อ (Attendance)
       const attendedIds = new Set();
@@ -347,7 +367,7 @@
       
       document.getElementById('attendanceTableBody').innerHTML = tableHtml || `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400">ยังไม่มีข้อมูลการลงทะเบียน</td></tr>`;
 
-      // คำนวณ KPI ด้านบน
+      // คำนวณ KPI
       const missed = totalReg - totalAttendedFromReg;
       const rate = totalReg > 0 ? preciseRound((totalAttendedFromReg / totalReg) * 100, 2) : 0;
 
@@ -364,7 +384,7 @@
 
       if(satTotal > 0) {
           renderSatisfaction(SAT_DATA);
-          renderRankingTable('currTableBody', getCombinedCourseCounts(SAT_DATA), satTotal); 
+          renderRankedTable('currTableBody', getCounts(SAT_DATA, 14, true), satTotal); 
           
           renderDataTable('roundTableBody', getCounts(SAT_DATA, 15), satTotal); 
           renderDataTable('futureTableBody', getCounts(SAT_DATA, 13), satTotal); 
@@ -411,22 +431,7 @@
         return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
     }
 
-    function getCombinedCourseCounts(data) {
-        let c = {};
-        data.forEach(r => {
-            let val = String(r[14] || "").trim(); 
-            if (val && val !== "-" && val !== "") {
-                let arr = val.split(/,\s*/);
-                arr.forEach(x => { 
-                    if(x && x !== "") c[x] = (c[x] || 0) + 1; 
-                });
-            }
-        });
-        return Object.entries(c).sort((a,b) => b[1] - a[1]);
-    }
-
     function renderSatisfaction(data) {
-      // แก้ชื่อคลาสไอคอนเป็นมาตรฐาน เพื่อไม่ให้มีรูปหาย
       const m = [
         {c:3, l:'นิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์', ic:'fi-sr-presentation'}, 
         {c:4, l:'กิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย', ic:'fi-sr-briefcase'}, 
@@ -464,7 +469,8 @@
       }).join('');
     }
 
-    function renderRankingTable(containerId, data, total) {
+    // ตารางแบบมีตัวเลขจัดอันดับ
+    function renderRankedTable(containerId, data, total) {
       const medals = [
           '<div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-trophy text-amber-500 mt-1"></i></div>', 
           '<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-trophy text-slate-400 mt-1"></i></div>', 
@@ -475,15 +481,15 @@
         let p = preciseRound(it[1]*100/total, 2).toFixed(2); 
         let icon = i < 3 ? medals[i] : `<span class="font-black text-slate-400">${i+1}</span>`;
         return `<tr class="hover:bg-cyan-50 transition-colors border-b border-slate-50"> 
-            <td class="p-3 text-center align-middle">${icon}</td> 
+            <td class="p-3 text-center align-middle w-16">${icon}</td> 
             <td class="p-3 font-bold text-slate-700">${it[0]}</td> 
-            <td class="p-3 text-right font-black text-cyan-600 text-lg">${it[1]}</td> 
-            <td class="p-3 text-right text-slate-500 font-bold">${p}%</td> 
+            <td class="p-3 text-right font-black text-cyan-600 text-lg w-24">${it[1]}</td> 
+            <td class="p-3 text-right text-slate-500 font-bold w-32">${p}%</td> 
         </tr>`;
       }).join('');
     }
 
-    // ฟังก์ชันสร้างตารางสถิติทั่วไป 
+    // ตารางสถิติทั่วไป 
     function renderDataTable(containerId, data, total) {
        if(data.length === 0) { document.getElementById(containerId).innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-500 font-bold">ไม่มีข้อมูล</td></tr>`; return; }
        document.getElementById(containerId).innerHTML = data.map((it) => {
