@@ -7,8 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     tailwind.config = {
@@ -21,8 +19,6 @@
     
     @media print {
       .no-print { display: none !important; }
-      .chart-container { display: none !important; }
-      .table-container { display: block !important; }
       .print-only { display: block !important; }
       body { background-color: white; padding: 0; }
       .container { max-width: 100%; width: 100%; }
@@ -33,6 +29,12 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0891b2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Filter Buttons */
+    .filter-btn { transition: all 0.2s; }
+    .filter-btn.active-all { background-color: #f1f5f9; border-color: #cbd5e1; color: #334155; }
+    .filter-btn.active-attended { background-color: #ecfdf5; border-color: #a7f3d0; color: #059669; }
+    .filter-btn.active-missed { background-color: #fff1f2; border-color: #fecdd3; color: #e11d48; }
   </style>
 </head>
 <body class="text-slate-800 antialiased pb-10">
@@ -49,7 +51,7 @@
     <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-200 pb-6 no-print">
       <div class="flex items-center gap-4">
         <div class="w-14 h-14 bg-cyan-100 rounded-2xl flex justify-center items-center text-cyan-600 shadow-inner">
-            <i class="fi fi-sr-chart-pie-alt text-3xl mt-1"></i>
+            <i class="fi fi-sr-apps text-3xl mt-1"></i>
         </div>
         <div>
             <h1 class="text-2xl md:text-3xl font-black text-[#0a2240] tracking-tight">CRA Innovations Forum 2026</h1>
@@ -63,59 +65,57 @@
       </div>
     </header>
 
-    <!-- ข้อมูลภาพรวมการเข้าร่วมงาน (เทียบ 2 ชีท) -->
+    <!-- ข้อมูลภาพรวมการเข้าร่วมงาน -->
     <div class="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-       <!-- ลงทะเบียน -->
        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
              <p class="text-slate-500 font-bold text-sm mb-1">ยอดลงทะเบียนทั้งหมด</p>
              <div class="flex items-baseline gap-2"><span class="text-4xl font-black text-[#0a2240]" id="kpiReg">0</span><span class="text-sm font-bold text-slate-400">คน</span></div>
           </div>
-          <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i class="fi fi-sr-users-alt text-xl mt-1"></i></div>
+          <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i class="fi fi-sr-users mt-1"></i></div>
        </div>
        
-       <!-- เข้าร่วมจริง -->
        <div class="bg-gradient-to-br from-[#0a2240] to-cyan-700 rounded-3xl p-6 shadow-lg text-white flex items-center justify-between transform hover:-translate-y-1 transition">
           <div>
              <p class="text-cyan-100 font-bold text-sm mb-1">เข้าร่วมงานจริง (เช็คอิน)</p>
              <div class="flex items-baseline gap-2"><span class="text-4xl font-black" id="kpiAttended">0</span><span class="text-sm font-bold text-cyan-200">คน</span></div>
           </div>
-          <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-cyan-200"><i class="fi fi-sr-document-signed text-xl mt-1"></i></div>
+          <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-cyan-200"><i class="fi fi-sr-document mt-1"></i></div>
        </div>
 
-       <!-- ไม่มางาน -->
        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
              <p class="text-rose-400 font-bold text-sm mb-1">ขาดการเข้าร่วม (No-show)</p>
              <div class="flex items-baseline gap-2"><span class="text-4xl font-black text-rose-500" id="kpiMissed">0</span><span class="text-sm font-bold text-slate-400">คน</span></div>
           </div>
-          <div class="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-400"><i class="fi fi-sr-user-time text-xl mt-1"></i></div>
+          <div class="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-400"><i class="fi fi-sr-cross-circle mt-1"></i></div>
        </div>
 
-       <!-- อัตราเข้าร่วม % -->
        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
              <p class="text-emerald-500 font-bold text-sm mb-1">อัตราการเข้าร่วมงาน</p>
              <div class="flex items-baseline gap-2"><span class="text-4xl font-black text-emerald-600" id="kpiRate">0</span><span class="text-xl font-bold text-emerald-600">%</span></div>
           </div>
-          <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500"><i class="fi fi-sr-chart-pie-alt text-xl mt-1"></i></div>
+          <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500"><i class="fi fi-sr-chart-pie mt-1"></i></div>
        </div>
     </div>
 
-    <!-- ตารางเช็คชื่อผู้เข้าร่วมงาน -->
+    <!-- ตารางเช็คชื่อผู้เข้าร่วมงาน (พร้อมฟิลเตอร์) -->
     <div class="glass-card p-6 md:p-8 mb-8 border-l-4 border-l-cyan-600">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
          <h3 class="text-xl font-black text-[#0a2240] flex items-center gap-3">
-           <i class="fi fi-sr-clipboard-list-check text-cyan-600 text-2xl"></i> สรุปสถานะผู้ลงทะเบียนและการเช็คอิน
+           <i class="fi fi-sr-clipboard-list text-cyan-600 text-2xl"></i> สรุปสถานะผู้ลงทะเบียนและการเช็คอิน
          </h3>
-         <div class="flex gap-3 text-sm font-bold no-print">
-            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100"><i class="fi fi-sr-check-circle"></i> เข้าร่วมแล้ว</span>
-            <span class="px-3 py-1 bg-rose-50 text-rose-500 rounded-lg border border-rose-100"><i class="fi fi-sr-cross-circle"></i> ไม่มางาน</span>
+         <!-- ส่วนตัวกรองสถานะ -->
+         <div class="flex flex-wrap gap-2 text-sm font-bold no-print w-full md:w-auto">
+            <button onclick="filterAttendance('All')" id="btnFilterAll" class="filter-btn active-all flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fi fi-sr-apps"></i> ทั้งหมด</button>
+            <button onclick="filterAttendance('Attended')" id="btnFilterAttended" class="filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"><i class="fi fi-sr-check-circle"></i> เข้าร่วม</button>
+            <button onclick="filterAttendance('Missed')" id="btnFilterMissed" class="filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200"><i class="fi fi-sr-cross-circle"></i> ไม่มางาน</button>
          </div>
       </div>
       
       <div class="overflow-x-auto max-h-[400px] overflow-y-auto rounded-xl border border-slate-200">
-        <table class="w-full text-sm text-left border-collapse relative">
+        <table class="w-full text-sm text-left border-collapse relative min-w-[600px]">
           <thead class="bg-slate-100 text-slate-600 font-bold uppercase sticky top-0 z-10 shadow-sm">
               <tr>
                   <th class="p-4 w-20 text-center">รหัส TS</th>
@@ -135,43 +135,91 @@
         <i class="fi fi-sr-star text-amber-500"></i> สรุปข้อมูลจากแบบประเมินความพึงพอใจ
     </div>
 
-    <!-- Satisfaction Scores -->
+    <!-- Satisfaction Scores (ใช้ชื่อเต็ม) -->
     <div class="glass-card p-6 md:p-8 mb-8">
       <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
         ภาพรวมคะแนนความพึงพอใจรายหัวข้อ (เต็ม 5)
       </h3>
-      <div id="satisfactionContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+      <!-- เปลี่ยน grid เป็นแบบการ์ดแนวนอน/แนวตั้งที่เหมาะสมกับข้อความยาวๆ -->
+      <div id="satisfactionContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
     </div>
 
-    <!-- Ranking Table -->
-    <div class="glass-card p-6 md:p-8 mb-8">
-      <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
-        <i class="fi fi-sr-graduation-cap text-indigo-500 text-2xl"></i> จัดอันดับหลักสูตรที่ผู้เข้าร่วมสนใจศึกษาต่อ (เลือกได้ 3 อันดับ)
-      </h3>
-      <div class="overflow-x-auto border border-slate-100 rounded-xl">
-        <table class="w-full text-sm text-left border-collapse">
-          <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase rounded-t-xl">
-              <tr>
-                  <th class="p-4 w-20 text-center">อันดับ</th>
-                  <th class="p-4">หลักสูตร</th>
-                  <th class="p-4 text-right">ผู้สนใจ (คน)</th>
-                  <th class="p-4 text-right">ร้อยละ (%)</th>
-              </tr>
-          </thead>
-          <tbody id="currTableBody" class="divide-y divide-slate-100"></tbody>
-        </table>
-      </div>
+    <!-- จัดอันดับหลักสูตร & ตารางข้อมูลสรุป (แทนกราฟวงกลม) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+       <!-- Ranking Table หลักสูตร -->
+       <div class="glass-card p-6 md:p-8">
+         <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+           <i class="fi fi-sr-graduation-cap text-indigo-500 text-xl"></i> จัดอันดับหลักสูตรที่ผู้เข้าร่วมสนใจ
+         </h3>
+         <div class="overflow-x-auto border border-slate-100 rounded-xl">
+           <table class="w-full text-sm text-left border-collapse min-w-[400px]">
+             <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
+                 <tr>
+                     <th class="p-3 w-16 text-center">อันดับ</th>
+                     <th class="p-3">หลักสูตร</th>
+                     <th class="p-3 text-right">จำนวน</th>
+                     <th class="p-3 text-right">ร้อยละ (%)</th>
+                 </tr>
+             </thead>
+             <tbody id="currTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+           </table>
+         </div>
+       </div>
+
+       <div class="flex flex-col gap-6">
+          <!-- ตาราง: รอบรับสมัครที่สนใจ -->
+          <div class="glass-card p-6 md:p-8 flex-1">
+             <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+               <i class="fi fi-sr-bullseye text-cyan-600 text-xl"></i> รอบรับสมัครที่สนใจ
+             </h3>
+             <div class="overflow-x-auto border border-slate-100 rounded-xl">
+                 <table class="w-full text-sm text-left border-collapse min-w-[300px]">
+                     <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
+                         <tr>
+                             <th class="p-3">รอบรับสมัคร</th>
+                             <th class="p-3 text-right w-24">จำนวน</th>
+                             <th class="p-3 text-right w-28">ร้อยละ (%)</th>
+                         </tr>
+                     </thead>
+                     <tbody id="roundTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+                 </table>
+             </div>
+          </div>
+
+          <!-- ตาราง: ความสนใจร่วมกิจกรรมในอนาคต -->
+          <div class="glass-card p-6 md:p-8 flex-1">
+             <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+               <i class="fi fi-sr-calendar text-cyan-600 text-xl"></i> ความสนใจร่วมกิจกรรมในอนาคต
+             </h3>
+             <div class="overflow-x-auto border border-slate-100 rounded-xl">
+                 <table class="w-full text-sm text-left border-collapse min-w-[300px]">
+                     <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
+                         <tr>
+                             <th class="p-3">ระดับความสนใจ</th>
+                             <th class="p-3 text-right w-24">จำนวน</th>
+                             <th class="p-3 text-right w-28">ร้อยละ (%)</th>
+                         </tr>
+                     </thead>
+                     <tbody id="futureTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+                 </table>
+             </div>
+          </div>
+       </div>
     </div>
 
-    <!-- Pie Charts -->
-    <div id="pieCardContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"></div>
-
-    <div class="grid grid-cols-1 gap-6 no-print mb-8">
-      <button onclick="openCustomModal('suggest')" class="bg-gradient-to-r from-slate-50 to-blue-50 p-8 rounded-3xl border-2 border-slate-200 flex flex-col items-center hover:-translate-y-1 transition-all group shadow-sm">
-        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform"><i class="fi fi-sr-comment-alt text-3xl text-blue-500 mt-1"></i></div>
-        <h3 class="font-black text-slate-700 text-xl md:text-2xl mb-3">ข้อเสนอแนะเพื่อการพัฒนา</h3>
-        <span class="bg-[#0a2240] text-white px-8 py-3 rounded-full shadow-md font-bold">คลิกอ่านข้อความทั้งหมด</span>
-      </button>
+    <!-- ส่วนข้อเสนอแนะแบบแสดงตรงบนหน้าเว็บ (มี Pagination) -->
+    <div class="glass-card p-6 md:p-8 mb-8 no-print">
+       <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+          <i class="fi fi-sr-comment-alt text-blue-500 text-2xl"></i> ข้อเสนอแนะเพื่อการพัฒนา
+       </h3>
+       <div id="suggestionList" class="space-y-3 mb-6"></div>
+       
+       <!-- Pagination Controls -->
+       <div class="flex justify-between items-center border-t border-slate-100 pt-4" id="paginationControls">
+          <button id="btnPrev" onclick="changePage(-1)" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">ก่อนหน้า</button>
+          <span class="text-sm font-bold text-slate-500">หน้าที่ <span id="lblPageNum" class="text-blue-600">1</span> จาก <span id="lblTotalPages">1</span></span>
+          <button id="btnNext" onclick="changePage(1)" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">ถัดไป</button>
+       </div>
     </div>
 
     <div class="print-only">
@@ -179,28 +227,16 @@
     </div>
   </div>
 
-  <!-- Modal Base -->
-  <div id="modalBase" class="fixed inset-0 z-50 hidden no-print">
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
-    <div class="absolute inset-0 flex items-center justify-center p-4">
-      <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col relative overflow-hidden">
-        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-          <h2 id="mHeader" class="text-xl font-black text-slate-800 flex items-center gap-2"></h2>
-          <button onclick="closeModal()" class="bg-white text-slate-400 hover:text-rose-500 rounded-full w-10 h-10 flex justify-center items-center shadow-sm transition"><i class="fi fi-sr-cross-small text-xl mt-1"></i></button>
-        </div>
-        <div id="mBody" class="p-6 overflow-y-auto bg-white"></div>
-        <div id="mFooter" class="p-6 border-t border-slate-100 bg-slate-50"></div>
-      </div>
-    </div>
-  </div>
-
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbyZrOesuYN-6AhBxFx7ZBpNkjwgPeMutI3KFuRBZxt6xh7Ka-KJi4CwMq_N1E-kyaEUAQ/exec'; 
-
-    Chart.register(ChartDataLabels);
     
     let SAT_DATA = [];
     let REG_DATA = [];
+    
+    // สำหรับ Pagination ข้อเสนอแนะ
+    let suggestionsArray = [];
+    let currentPage = 1;
+    const itemsPerPage = 5;
 
     window.onload = async () => {
       try {
@@ -215,7 +251,6 @@
             SAT_DATA = json.satisfaction;
             REG_DATA = json.thinkdata;
             
-            // ตัด Header ทิ้ง
             if(SAT_DATA.length > 0 && SAT_DATA[0][0] === "ประเภท") SAT_DATA = SAT_DATA.slice(1);
             if(REG_DATA.length > 0 && REG_DATA[0][0] === "ID STU") REG_DATA = REG_DATA.slice(1);
 
@@ -241,36 +276,32 @@
     }
 
     function renderDashboard() {
-      // 1. วิเคราะห์ข้อมูลการเข้าร่วมงาน (Attendance Check)
+      // --- 1. จัดการข้อมูลการเข้างาน ---
       const totalReg = REG_DATA.length;
-      
-      // ดึง ID STU จากชีท satisfaction (คอลัมน์ B = Index 1)
       const attendedIds = new Set();
-      let totalAttendedFromReg = 0; // นับเฉพาะคนที่มีรหัส STU
+      let totalAttendedFromReg = 0; 
       
       SAT_DATA.forEach(row => {
           let id = String(row[1]).trim();
-          if(id && id !== "-" && id !== "") {
-              attendedIds.add(id);
-          }
+          if(id && id !== "-" && id !== "") attendedIds.add(id);
       });
 
-      // สร้างตารางรายชื่อ
       let tableHtml = "";
       REG_DATA.forEach(row => {
-          let id = String(row[0]).trim(); // คอลัมน์ A (Index 0) ของ thinkdata
-          let name = row[1]; // คอลัมน์ B ชื่อ
-          let school = row[4]; // คอลัมน์ E โรงเรียน
-          let province = row[5]; // คอลัมน์ F จังหวัด
+          let id = String(row[0]).trim(); 
+          let name = row[1]; 
+          let school = row[4]; 
+          let province = row[5]; 
           
           let isAttended = attendedIds.has(id);
           if (isAttended) totalAttendedFromReg++;
 
+          let statusClass = isAttended ? 'att-attended' : 'att-missed';
           let statusBadge = isAttended 
               ? `<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-black tracking-wide"><i class="fi fi-sr-check-circle mr-1"></i> เข้าร่วม</span>`
               : `<span class="bg-rose-100 text-rose-600 px-3 py-1 rounded-full text-xs font-black tracking-wide"><i class="fi fi-sr-cross-circle mr-1"></i> ไม่มางาน</span>`;
           
-          tableHtml += `<tr class="hover:bg-slate-50 transition border-b border-slate-100">
+          tableHtml += `<tr class="att-row ${statusClass} hover:bg-slate-50 transition border-b border-slate-100" data-status="${isAttended ? 'Attended' : 'Missed'}">
               <td class="p-3 text-center font-bold text-cyan-700">${id}</td>
               <td class="p-3 font-bold text-slate-700">${name}</td>
               <td class="p-3 text-slate-500">${school}</td>
@@ -284,26 +315,55 @@
       const missed = totalReg - totalAttendedFromReg;
       const rate = totalReg > 0 ? preciseRound((totalAttendedFromReg / totalReg) * 100, 2) : 0;
 
-      // อัปเดต KPI
       document.getElementById('kpiReg').innerText = totalReg.toLocaleString();
-      document.getElementById('kpiAttended').innerText = SAT_DATA.length.toLocaleString(); // รวมวิทยากร/บุคคลทั่วไปด้วย
+      document.getElementById('kpiAttended').innerText = SAT_DATA.length.toLocaleString(); 
       document.getElementById('kpiMissed').innerText = missed > 0 ? missed.toLocaleString() : 0;
       document.getElementById('kpiRate').innerText = rate.toFixed(1);
 
-      // 2. วิเคราะห์แบบประเมินความพึงพอใจ (จาก SAT_DATA)
+      // --- 2. วิเคราะห์แบบประเมินความพึงพอใจ ---
       const satTotal = SAT_DATA.length;
       if(satTotal > 0) {
           renderSatisfaction(SAT_DATA);
           renderRankingTable('currTableBody', getCombinedCourseCounts(SAT_DATA), satTotal); 
-          renderPieSections(SAT_DATA, satTotal);
-          renderPrintData(SAT_DATA);
+          
+          // แทนที่จะใช้กราฟวงกลม ให้สร้างตารางธรรมดา
+          renderDataTable('roundTableBody', getCounts(SAT_DATA, 15), satTotal); // คอลัมน์ P (รอบรับสมัคร)
+          renderDataTable('futureTableBody', getCounts(SAT_DATA, 13), satTotal); // คอลัมน์ N (ความสนใจอนาคต)
+
+          // จัดการข้อเสนอแนะ
+          suggestionsArray = [...new Set(SAT_DATA.map(r => r[16]))].filter(v => v && String(v).trim() !== "-" && String(v).length > 2);
+          renderSuggestions();
+          renderPrintData(suggestionsArray);
       }
+    }
+
+    // ฟังก์ชันกรองตารางเช็คชื่อ
+    function filterAttendance(status) {
+       // รีเซ็ตปุ่ม
+       document.getElementById('btnFilterAll').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-slate-50";
+       document.getElementById('btnFilterAttended').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200";
+       document.getElementById('btnFilterMissed').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200";
+
+       // ไฮไลท์ปุ่มที่ถูกเลือก
+       if(status === 'All') document.getElementById('btnFilterAll').classList.add('active-all');
+       if(status === 'Attended') document.getElementById('btnFilterAttended').classList.add('active-attended');
+       if(status === 'Missed') document.getElementById('btnFilterMissed').classList.add('active-missed');
+
+       // กรองแถว
+       const rows = document.querySelectorAll('.att-row');
+       rows.forEach(r => {
+           if(status === 'All' || r.getAttribute('data-status') === status) {
+               r.style.display = '';
+           } else {
+               r.style.display = 'none';
+           }
+       });
     }
 
     function getCombinedCourseCounts(data) {
         let c = {};
         data.forEach(r => {
-            let val = String(r[14] || "").trim(); // คอลัมน์ O (Index 14) หลักสูตรที่สนใจ
+            let val = String(r[14] || "").trim(); 
             if (val && val !== "-" && val !== "") {
                 let arr = val.split(/,\s*/);
                 arr.forEach(x => { 
@@ -314,17 +374,28 @@
         return Object.entries(c).sort((a,b) => b[1] - a[1]);
     }
 
+    function getCounts(data, idx) { 
+        let c={}; 
+        data.forEach(r => { 
+            let val = String(r[idx] || "").trim();
+            if(!val || val === "-") return;
+            c[val] = (c[val]||0)+1; 
+        }); 
+        return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
+    }
+
     function renderSatisfaction(data) {
+      // ใช้ชื่อเต็มทั้งหมด
       const m = [
-        {c:3, l:'นิทรรศการนวัตกรรมฯ', ic:'fi-sr-presentation'}, 
-        {c:4, l:'บทบาทราชวิทยาลัยจุฬาภรณ์', ic:'fi-sr-bullseye'}, 
-        {c:5, l:'ปาฐกถา: วางรากฐานสู่ประเทศรายได้สูง', ic:'fi-sr-podium'}, 
-        {c:6, l:'ปลดล็อกความคิดสร้างสรรค์', ic:'fi-sr-bulb'},
-        {c:7, l:'AICEDA: ปัญญาประดิษฐ์ทางการแพทย์', ic:'fi-sr-microchip'},
-        {c:8, l:'Pitching Idea 101', ic:'fi-sr-rocket-lunch'},
-        {c:9, l:'AI & Me', ic:'fi-sr-robot'},
-        {c:10, l:'We are Innovator (บรรยาย)', ic:'fi-sr-user-gear'},
-        {c:11, l:'We are Innovator (Workshop)', ic:'fi-sr-users-gear'},
+        {c:3, l:'ความพึงพอใจงานนิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์', ic:'fi-sr-blackboard'}, 
+        {c:4, l:'ความพึงพอใจต่อกิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย', ic:'fi-sr-target'}, 
+        {c:5, l:'ความพึงพอใจปาฐกถาพิเศษ "การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี"', ic:'fi-sr-megaphone'}, 
+        {c:6, l:'ความพึงพอใจต่อการบรรยายพิเศษ: ปลดล็อกความคิดสร้างสรรค์ ปั้นนวัตกรรมเปลี่ยนโลก', ic:'fi-sr-lightbulb'},
+        {c:7, l:'ความพึงพอใจบรรยายพิเศษ "AICEDA: ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก"', ic:'fi-sr-cpu'},
+        {c:8, l:'ความพึงพอใจบรรยายพิเศษ "Pitching Idea 101: ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้)"', ic:'fi-sr-rocket'},
+        {c:9, l:'ความพึงพอใจบรรยายพิเศษ "AI & Me: คู่หูสร้างสรรค์ผลงานยุคดิจิทัล"', ic:'fi-sr-laptop'},
+        {c:10, l:'ความพึงพอใจบรรยายพิเศษ "We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR"', ic:'fi-sr-user'},
+        {c:11, l:'ความพึงพอใจกิจกรรม Workshop : We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR', ic:'fi-sr-users'},
         {c:12, l:'ภาพรวมกิจกรรมทั้งหมด', ic:'fi-sr-star'}
       ];
 
@@ -336,16 +407,16 @@
         let colorClass = item.c === 12 ? 'from-amber-400 to-orange-500' : 'from-cyan-400 to-blue-500'; 
         let iconColor = item.c === 12 ? 'text-amber-500' : 'text-cyan-600';
 
-        return `<div class="bg-white p-5 rounded-2xl border border-slate-100 flex flex-col shadow-sm hover:-translate-y-1 transition-transform">
-                  <div class="flex justify-between items-start mb-4 gap-2">
-                    <span class="text-sm font-bold text-slate-700 flex items-start gap-2 leading-tight">
-                      <i class="fi ${item.ic} ${iconColor} mt-0.5 flex-shrink-0"></i> <span>${item.l}</span>
+        return `<div class="bg-white p-5 rounded-2xl border border-slate-100 flex flex-col shadow-sm">
+                  <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+                    <span class="text-xs md:text-sm font-bold text-slate-600 flex items-start gap-2 leading-relaxed flex-1">
+                      <i class="fi ${item.ic} ${iconColor} mt-0.5 flex-shrink-0 text-base"></i> <span>${item.l}</span>
                     </span>
-                    <div class="flex flex-col items-end flex-shrink-0">
-                      <span class="text-2xl font-black text-[#0a2240]">${avg}<span class="text-sm text-slate-400 font-medium">/5</span></span>
+                    <div class="flex flex-col items-end flex-shrink-0 bg-slate-50 px-3 py-1 rounded-lg">
+                      <span class="text-xl md:text-2xl font-black text-[#0a2240]">${avg}<span class="text-xs text-slate-400 font-medium">/5</span></span>
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mt-auto">
+                  <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-auto">
                     <div class="bg-gradient-to-r ${colorClass} h-full rounded-full" style="width:${pct}%"></div>
                   </div>
                 </div>`;
@@ -371,64 +442,60 @@
       }).join('');
     }
 
-    function renderPieSections(data, total) {
-      const container = document.getElementById('pieCardContainer'); container.innerHTML = '';
-      const items = [
-        { id: 'Round', col: 15, title: 'รอบรับสมัครที่สนใจ', ic: 'fi-sr-bullseye-pointer' }, 
-        { id: 'Future', col: 13, title: 'ความสนใจร่วมกิจกรรมในอนาคต', ic: 'fi-sr-calendar-star' }
-      ];
-      items.forEach(p => {
-        const div = document.createElement('div'); div.className = "glass-card p-6 flex flex-col border border-slate-100";
-        div.innerHTML = `<div class="flex justify-between items-center mb-6"><h3 class="font-bold text-slate-700 flex items-center gap-2 text-sm md:text-base"><i class="fi ${p.ic} text-cyan-600"></i> ${p.title}</h3></div><div id="v${p.id}Chart" class="h-48 chart-container"><canvas id="c${p.id}"></canvas></div>`;
-        container.appendChild(div); renderChart(`c${p.id}`, 'pie', getCounts(data, p.col), total);
-      });
+    // ฟังก์ชันสร้างตารางสถิติทั่วไป (ใช้แทนกราฟวงกลม)
+    function renderDataTable(containerId, data, total) {
+       if(data.length === 0) { document.getElementById(containerId).innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-500 font-bold">ไม่มีข้อมูล</td></tr>`; return; }
+       document.getElementById(containerId).innerHTML = data.map((it) => {
+          let p = preciseRound(it[1]*100/total, 2).toFixed(2); 
+          return `<tr class="hover:bg-cyan-50 transition-colors border-b border-slate-50"> 
+              <td class="p-3 font-bold text-slate-700">${it[0]}</td> 
+              <td class="p-3 text-right font-black text-cyan-600 text-lg">${it[1]}</td> 
+              <td class="p-3 text-right text-slate-500 font-bold">${p}%</td> 
+          </tr>`;
+       }).join('');
     }
 
-    function getCounts(data, idx) { 
-        let c={}; 
-        data.forEach(r => { 
-            let val = String(r[idx] || "").trim();
-            if(!val || val === "-") return;
-            c[val] = (c[val]||0)+1; 
-        }); 
-        return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
+    // --- ระบบข้อเสนอแนะพร้อม Pagination ---
+    function renderSuggestions() {
+       const totalPages = Math.ceil(suggestionsArray.length / itemsPerPage) || 1;
+       document.getElementById('lblTotalPages').innerText = totalPages;
+       
+       if (suggestionsArray.length === 0) {
+           document.getElementById('suggestionList').innerHTML = '<div class="p-8 text-center text-slate-400 font-bold border border-dashed border-slate-200 rounded-xl">ไม่มีข้อเสนอแนะเพิ่มเติม</div>';
+           document.getElementById('paginationControls').style.display = 'none';
+           return;
+       }
+
+       document.getElementById('paginationControls').style.display = 'flex';
+       
+       const start = (currentPage - 1) * itemsPerPage;
+       const end = start + itemsPerPage;
+       const currentItems = suggestionsArray.slice(start, end);
+
+       document.getElementById('suggestionList').innerHTML = currentItems.map((text, index) => {
+           let actualIndex = start + index + 1;
+           return `<div class="p-4 bg-white rounded-xl border border-slate-200 flex items-start gap-4 shadow-sm">
+               <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black flex-shrink-0 text-sm">${actualIndex}</div>
+               <div class="text-slate-600 text-sm leading-relaxed pt-1">${text}</div>
+           </div>`;
+       }).join('');
+
+       // จัดการสถานะปุ่ม
+       document.getElementById('lblPageNum').innerText = currentPage;
+       document.getElementById('btnPrev').disabled = currentPage === 1;
+       document.getElementById('btnNext').disabled = currentPage === totalPages;
     }
 
-    function renderChart(id, type, data, total) { 
-        new Chart(document.getElementById(id),{
-            type:type,
-            data:{
-                labels:data.map(d=>d[0]),
-                datasets:[{
-                    data:data.map(d=>d[1]),
-                    backgroundColor:['#0891b2','#0ea5e9','#3b82f6','#8b5cf6','#eab308','#f97316'],
-                    borderWidth: 2, borderColor: '#fff'
-                }]
-            },
-            options:{
-                maintainAspectRatio:false,
-                plugins:{
-                    datalabels:{color:'#fff',font:{family:'"Noto Sans Thai"', weight: 'bold'},formatter:(v)=>`${v}`},
-                    legend:{display: true, position:'right',labels:{font:{family:'"Noto Sans Thai"',size:11},boxWidth:12}}
-                }
-            }
-        }); 
+    function changePage(direction) {
+       const totalPages = Math.ceil(suggestionsArray.length / itemsPerPage);
+       currentPage += direction;
+       if (currentPage < 1) currentPage = 1;
+       if (currentPage > totalPages) currentPage = totalPages;
+       renderSuggestions();
     }
 
-    function openCustomModal(type) {
-      document.getElementById('mHeader').innerHTML = `<i class="fi fi-sr-comment-alt text-blue-500"></i> ข้อเสนอแนะเพื่อการพัฒนา`;
-      const list = [...new Set(SAT_DATA.map(r => r[16]))].filter(v => v && String(v).trim() !== "-" && String(v).length > 2); // คอลัมน์ Q (Index 16)
-      document.getElementById('mBody').innerHTML = list.length ? `<ul class="space-y-3">${list.map(v => `<li class="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex items-start gap-3 text-sm text-slate-700 font-medium"><i class="fi fi-sr-quote-right text-blue-400 mt-0.5"></i> <span class="leading-relaxed">${v}</span></li>`).join('')}</ul>` : '<p class="text-center text-slate-400 py-10 font-bold">ไม่มีข้อเสนอแนะ</p>';
-      
-      document.getElementById('mFooter').innerHTML = ''; 
-      document.getElementById('modalBase').classList.remove('hidden');
-    }
-
-    function closeModal() { document.getElementById('modalBase').classList.add('hidden'); }
-
-    function renderPrintData(data) {
-      const sg = [...new Set(data.map(r => r[16]))].filter(v => v && String(v).trim() !== "-" && String(v).length > 2);
-      document.getElementById('printSuggestContainer').innerHTML = sg.length ? `<ul class="list-disc pl-8 space-y-1 text-sm">${sg.map(v => `<li class="text-slate-700">${v}</li>`).join('')}</ul>` : 'ไม่มีข้อมูล';
+    function renderPrintData(sgArray) {
+      document.getElementById('printSuggestContainer').innerHTML = sgArray.length ? `<ul class="list-disc pl-8 space-y-1 text-sm">${sgArray.map(v => `<li class="text-slate-700">${v}</li>`).join('')}</ul>` : 'ไม่มีข้อมูล';
     }
   </script>
 </body>
