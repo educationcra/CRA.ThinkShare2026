@@ -8,11 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['"Noto Sans Thai"', 'sans-serif'] } } }
-    }
-  </script>
   <style>
     body { font-family: 'Noto Sans Thai', sans-serif; background-color: #f1f5f9; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f8fafc; }
@@ -30,7 +25,6 @@
     .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0891b2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Filter Buttons */
     .filter-btn { transition: all 0.2s; }
     .filter-btn.active-all { background-color: #f1f5f9; border-color: #cbd5e1; color: #334155; }
     .filter-btn.active-attended { background-color: #ecfdf5; border-color: #a7f3d0; color: #059669; }
@@ -39,15 +33,13 @@
 </head>
 <body class="text-slate-800 antialiased pb-10">
 
-  <!-- Loading Screen -->
   <div id="loading" class="fixed inset-0 bg-white/95 z-[60] flex flex-col items-center justify-center transition-opacity duration-500">
     <div class="loader mb-4"></div>
     <p class="text-cyan-700 font-bold animate-pulse text-xl">กำลังประมวลผลข้อมูล Real-time...</p>
-    <p class="text-sm text-slate-400 mt-2">Connecting to thinkdata & satisfaction...</p>
+    <p class="text-sm text-slate-400 mt-2">Connecting to CRA Database...</p>
   </div>
 
   <div id="mainApp" class="container mx-auto px-4 py-8 max-w-[90rem] opacity-0 transition-opacity duration-700 hidden">
-    <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-200 pb-6 no-print">
       <div class="flex items-center gap-4">
         <div class="w-14 h-14 bg-cyan-100 rounded-2xl flex justify-center items-center text-cyan-600 shadow-inner">
@@ -65,7 +57,6 @@
       </div>
     </header>
 
-    <!-- ข้อมูลภาพรวมการเข้าร่วมงาน -->
     <div class="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
@@ -100,13 +91,60 @@
        </div>
     </div>
 
-    <!-- ตารางเช็คชื่อผู้เข้าร่วมงาน (พร้อมฟิลเตอร์) -->
-    <div class="glass-card p-6 md:p-8 mb-8 border-l-4 border-l-cyan-600">
+    <hr class="my-10 border-slate-200">
+    <div class="mb-6 text-xl font-bold text-slate-700 px-2 flex items-center gap-2">
+        <i class="fi fi-sr-clipboard-list text-indigo-500"></i> สรุปข้อมูลพื้นฐานจากผู้ลงทะเบียนทั้งหมด (Registration Data)
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+       <div class="glass-card p-6 md:p-8">
+         <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
+           <i class="fi fi-sr-megaphone text-indigo-500"></i> แหล่งที่ทราบข่าวสารกิจกรรม
+         </h3>
+         <div class="overflow-x-auto border border-slate-100 rounded-xl">
+           <table class="w-full text-sm text-left border-collapse">
+             <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
+                 <tr><th class="p-3">แหล่งข่าวสาร</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+             </thead>
+             <tbody id="sourceTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+           </table>
+         </div>
+       </div>
+
+       <div class="glass-card p-6 md:p-8">
+         <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
+           <i class="fi fi-sr-thumbs-up text-indigo-500"></i> ติดตามเพจ Education CRA
+         </h3>
+         <div class="overflow-x-auto border border-slate-100 rounded-xl">
+           <table class="w-full text-sm text-left border-collapse">
+             <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
+                 <tr><th class="p-3">สถานะการติดตาม</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+             </thead>
+             <tbody id="followTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+           </table>
+         </div>
+       </div>
+
+       <div class="glass-card p-6 md:p-8">
+         <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
+           <i class="fi fi-sr-browser text-indigo-500"></i> แพลตฟอร์มที่ใช้ติดตามข่าวสาร
+         </h3>
+         <div class="overflow-x-auto border border-slate-100 rounded-xl">
+           <table class="w-full text-sm text-left border-collapse">
+             <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
+                 <tr><th class="p-3">แพลตฟอร์ม</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
+             </thead>
+             <tbody id="platformTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+           </table>
+         </div>
+       </div>
+    </div>
+
+    <div class="glass-card p-6 md:p-8 mb-8 border-l-4 border-l-cyan-600 mt-8">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
          <h3 class="text-xl font-black text-[#0a2240] flex items-center gap-3">
-           <i class="fi fi-sr-clipboard-list text-cyan-600 text-2xl"></i> สรุปสถานะผู้ลงทะเบียนและการเช็คอิน
+           <i class="fi fi-sr-users-alt text-cyan-600 text-2xl"></i> สรุปสถานะผู้ลงทะเบียนและการเช็คอิน
          </h3>
-         <!-- ส่วนตัวกรองสถานะ -->
          <div class="flex flex-wrap gap-2 text-sm font-bold no-print w-full md:w-auto">
             <button onclick="filterAttendance('All')" id="btnFilterAll" class="filter-btn active-all flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fi fi-sr-apps"></i> ทั้งหมด</button>
             <button onclick="filterAttendance('Attended')" id="btnFilterAttended" class="filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"><i class="fi fi-sr-check-circle"></i> เข้าร่วม</button>
@@ -130,36 +168,36 @@
       </div>
     </div>
 
+
     <hr class="my-10 border-slate-200">
     <div class="mb-6 text-xl font-bold text-slate-700 px-2 flex items-center gap-2">
         <i class="fi fi-sr-star text-amber-500"></i> สรุปข้อมูลจากแบบประเมินความพึงพอใจ
     </div>
 
-    <!-- Satisfaction Scores (ใช้ชื่อเต็ม) -->
+    <div class="bg-amber-50 border border-amber-200 text-amber-800 px-5 py-4 rounded-2xl flex items-start gap-3 mb-6 shadow-sm">
+        <i class="fi fi-sr-info text-amber-500 text-xl mt-0.5"></i>
+        <div>
+            <p class="font-black text-sm mb-1">หมายเหตุการคำนวณข้อมูลร้อยละ (%)</p>
+            <p class="text-sm font-medium">ข้อมูลสถิติในส่วนนี้ (ความพึงพอใจ, หลักสูตร, รอบรับสมัคร) ถูกคำนวณสัดส่วนจาก <b>"ผู้ที่เข้าร่วมงานและทำแบบประเมินจริง จำนวน <span id="actualRespondentCount" class="text-rose-600 font-black">0</span> คน"</b> เท่านั้น เพื่อให้สะท้อนผลลัพธ์ที่แท้จริง</p>
+        </div>
+    </div>
+
     <div class="glass-card p-6 md:p-8 mb-8">
       <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
         ภาพรวมคะแนนความพึงพอใจรายหัวข้อ (เต็ม 5)
       </h3>
-      <!-- เปลี่ยน grid เป็นแบบการ์ดแนวนอน/แนวตั้งที่เหมาะสมกับข้อความยาวๆ -->
       <div id="satisfactionContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
     </div>
 
-    <!-- จัดอันดับหลักสูตร & ตารางข้อมูลสรุป (แทนกราฟวงกลม) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-       <!-- Ranking Table หลักสูตร -->
        <div class="glass-card p-6 md:p-8">
          <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
-           <i class="fi fi-sr-graduation-cap text-indigo-500 text-xl"></i> จัดอันดับหลักสูตรที่ผู้เข้าร่วมสนใจ
+           <i class="fi fi-sr-graduation-cap text-cyan-600 text-xl"></i> จัดอันดับหลักสูตรที่สนใจศึกษาต่อ
          </h3>
          <div class="overflow-x-auto border border-slate-100 rounded-xl">
            <table class="w-full text-sm text-left border-collapse min-w-[400px]">
-             <thead class="bg-indigo-50 text-indigo-800 font-bold uppercase">
-                 <tr>
-                     <th class="p-3 w-16 text-center">อันดับ</th>
-                     <th class="p-3">หลักสูตร</th>
-                     <th class="p-3 text-right">จำนวน</th>
-                     <th class="p-3 text-right">ร้อยละ (%)</th>
-                 </tr>
+             <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
+                 <tr><th class="p-3 w-16 text-center">อันดับ</th><th class="p-3">หลักสูตร</th><th class="p-3 text-right">จำนวน</th><th class="p-3 text-right">ร้อยละ (%)</th></tr>
              </thead>
              <tbody id="currTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
            </table>
@@ -167,38 +205,28 @@
        </div>
 
        <div class="flex flex-col gap-6">
-          <!-- ตาราง: รอบรับสมัครที่สนใจ -->
           <div class="glass-card p-6 md:p-8 flex-1">
              <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
-               <i class="fi fi-sr-bullseye text-cyan-600 text-xl"></i> รอบรับสมัครที่สนใจ
+               <i class="fi fi-sr-bullseye-pointer text-cyan-600 text-xl"></i> รอบรับสมัครที่สนใจ
              </h3>
              <div class="overflow-x-auto border border-slate-100 rounded-xl">
                  <table class="w-full text-sm text-left border-collapse min-w-[300px]">
                      <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
-                         <tr>
-                             <th class="p-3">รอบรับสมัคร</th>
-                             <th class="p-3 text-right w-24">จำนวน</th>
-                             <th class="p-3 text-right w-28">ร้อยละ (%)</th>
-                         </tr>
+                         <tr><th class="p-3">รอบรับสมัคร</th><th class="p-3 text-right w-24">จำนวน</th><th class="p-3 text-right w-28">ร้อยละ (%)</th></tr>
                      </thead>
                      <tbody id="roundTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
                  </table>
              </div>
           </div>
 
-          <!-- ตาราง: ความสนใจร่วมกิจกรรมในอนาคต -->
           <div class="glass-card p-6 md:p-8 flex-1">
              <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
-               <i class="fi fi-sr-calendar text-cyan-600 text-xl"></i> ความสนใจร่วมกิจกรรมในอนาคต
+               <i class="fi fi-sr-calendar-star text-cyan-600 text-xl"></i> ความสนใจร่วมกิจกรรมในอนาคต
              </h3>
              <div class="overflow-x-auto border border-slate-100 rounded-xl">
                  <table class="w-full text-sm text-left border-collapse min-w-[300px]">
                      <thead class="bg-cyan-50 text-cyan-800 font-bold uppercase">
-                         <tr>
-                             <th class="p-3">ระดับความสนใจ</th>
-                             <th class="p-3 text-right w-24">จำนวน</th>
-                             <th class="p-3 text-right w-28">ร้อยละ (%)</th>
-                         </tr>
+                         <tr><th class="p-3">ระดับความสนใจ</th><th class="p-3 text-right w-24">จำนวน</th><th class="p-3 text-right w-28">ร้อยละ (%)</th></tr>
                      </thead>
                      <tbody id="futureTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
                  </table>
@@ -207,14 +235,12 @@
        </div>
     </div>
 
-    <!-- ส่วนข้อเสนอแนะแบบแสดงตรงบนหน้าเว็บ (มี Pagination) -->
     <div class="glass-card p-6 md:p-8 mb-8 no-print">
        <h3 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
           <i class="fi fi-sr-comment-alt text-blue-500 text-2xl"></i> ข้อเสนอแนะเพื่อการพัฒนา
        </h3>
        <div id="suggestionList" class="space-y-3 mb-6"></div>
        
-       <!-- Pagination Controls -->
        <div class="flex justify-between items-center border-t border-slate-100 pt-4" id="paginationControls">
           <button id="btnPrev" onclick="changePage(-1)" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">ก่อนหน้า</button>
           <span class="text-sm font-bold text-slate-500">หน้าที่ <span id="lblPageNum" class="text-blue-600">1</span> จาก <span id="lblTotalPages">1</span></span>
@@ -276,8 +302,17 @@
     }
 
     function renderDashboard() {
-      // --- 1. จัดการข้อมูลการเข้างาน ---
+      // ============================================
+      // 1. วิเคราะห์ข้อมูลผู้ลงทะเบียน (Thinkdata)
+      // ============================================
       const totalReg = REG_DATA.length;
+      
+      // ดึงข้อมูลตาราง 3 กล่องสำหรับ Registration
+      renderDataTable('sourceTableBody', getCounts(REG_DATA, 7), totalReg);
+      renderDataTable('followTableBody', getCounts(REG_DATA, 8), totalReg);
+      renderDataTable('platformTableBody', getCounts(REG_DATA, 9, true), totalReg); // ใช้โหมด Multi-select
+
+      // จัดการระบบเช็คชื่อ (Attendance)
       const attendedIds = new Set();
       let totalAttendedFromReg = 0; 
       
@@ -312,6 +347,7 @@
       
       document.getElementById('attendanceTableBody').innerHTML = tableHtml || `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400">ยังไม่มีข้อมูลการลงทะเบียน</td></tr>`;
 
+      // คำนวณ KPI ด้านบน
       const missed = totalReg - totalAttendedFromReg;
       const rate = totalReg > 0 ? preciseRound((totalAttendedFromReg / totalReg) * 100, 2) : 0;
 
@@ -320,17 +356,19 @@
       document.getElementById('kpiMissed').innerText = missed > 0 ? missed.toLocaleString() : 0;
       document.getElementById('kpiRate').innerText = rate.toFixed(1);
 
-      // --- 2. วิเคราะห์แบบประเมินความพึงพอใจ ---
+      // ============================================
+      // 2. วิเคราะห์แบบประเมินความพึงพอใจ (Satisfaction)
+      // ============================================
       const satTotal = SAT_DATA.length;
+      document.getElementById('actualRespondentCount').innerText = satTotal.toLocaleString();
+
       if(satTotal > 0) {
           renderSatisfaction(SAT_DATA);
           renderRankingTable('currTableBody', getCombinedCourseCounts(SAT_DATA), satTotal); 
           
-          // แทนที่จะใช้กราฟวงกลม ให้สร้างตารางธรรมดา
-          renderDataTable('roundTableBody', getCounts(SAT_DATA, 15), satTotal); // คอลัมน์ P (รอบรับสมัคร)
-          renderDataTable('futureTableBody', getCounts(SAT_DATA, 13), satTotal); // คอลัมน์ N (ความสนใจอนาคต)
+          renderDataTable('roundTableBody', getCounts(SAT_DATA, 15), satTotal); 
+          renderDataTable('futureTableBody', getCounts(SAT_DATA, 13), satTotal); 
 
-          // จัดการข้อเสนอแนะ
           suggestionsArray = [...new Set(SAT_DATA.map(r => r[16]))].filter(v => v && String(v).trim() !== "-" && String(v).length > 2);
           renderSuggestions();
           renderPrintData(suggestionsArray);
@@ -339,17 +377,14 @@
 
     // ฟังก์ชันกรองตารางเช็คชื่อ
     function filterAttendance(status) {
-       // รีเซ็ตปุ่ม
        document.getElementById('btnFilterAll').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-slate-50";
        document.getElementById('btnFilterAttended').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200";
        document.getElementById('btnFilterMissed').className = "filter-btn flex-1 md:flex-none px-4 py-2 border border-slate-200 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200";
 
-       // ไฮไลท์ปุ่มที่ถูกเลือก
        if(status === 'All') document.getElementById('btnFilterAll').classList.add('active-all');
        if(status === 'Attended') document.getElementById('btnFilterAttended').classList.add('active-attended');
        if(status === 'Missed') document.getElementById('btnFilterMissed').classList.add('active-missed');
 
-       // กรองแถว
        const rows = document.querySelectorAll('.att-row');
        rows.forEach(r => {
            if(status === 'All' || r.getAttribute('data-status') === status) {
@@ -358,6 +393,22 @@
                r.style.display = 'none';
            }
        });
+    }
+
+    // ฟังก์ชันช่วยนับจำนวนข้อมูล (รองรับโหมด Multi-select คั่นด้วยลูกน้ำ)
+    function getCounts(data, idx, isMulti = false) { 
+        let c={}; 
+        data.forEach(r => { 
+            let val = String(r[idx] || "").trim();
+            if(!val || val === "-") return;
+            if(isMulti) {
+                let arr = val.split(/,\s*/);
+                arr.forEach(x => { if(x) c[x] = (c[x]||0)+1; });
+            } else {
+                c[val] = (c[val]||0)+1; 
+            }
+        }); 
+        return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
     }
 
     function getCombinedCourseCounts(data) {
@@ -374,28 +425,18 @@
         return Object.entries(c).sort((a,b) => b[1] - a[1]);
     }
 
-    function getCounts(data, idx) { 
-        let c={}; 
-        data.forEach(r => { 
-            let val = String(r[idx] || "").trim();
-            if(!val || val === "-") return;
-            c[val] = (c[val]||0)+1; 
-        }); 
-        return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
-    }
-
     function renderSatisfaction(data) {
-      // ใช้ชื่อเต็มทั้งหมด
+      // แก้ชื่อคลาสไอคอนเป็นมาตรฐาน เพื่อไม่ให้มีรูปหาย
       const m = [
-        {c:3, l:'ความพึงพอใจงานนิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์', ic:'fi-sr-blackboard'}, 
-        {c:4, l:'ความพึงพอใจต่อกิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย', ic:'fi-sr-target'}, 
-        {c:5, l:'ความพึงพอใจปาฐกถาพิเศษ "การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี"', ic:'fi-sr-megaphone'}, 
-        {c:6, l:'ความพึงพอใจต่อการบรรยายพิเศษ: ปลดล็อกความคิดสร้างสรรค์ ปั้นนวัตกรรมเปลี่ยนโลก', ic:'fi-sr-lightbulb'},
-        {c:7, l:'ความพึงพอใจบรรยายพิเศษ "AICEDA: ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก"', ic:'fi-sr-cpu'},
-        {c:8, l:'ความพึงพอใจบรรยายพิเศษ "Pitching Idea 101: ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้)"', ic:'fi-sr-rocket'},
-        {c:9, l:'ความพึงพอใจบรรยายพิเศษ "AI & Me: คู่หูสร้างสรรค์ผลงานยุคดิจิทัล"', ic:'fi-sr-laptop'},
-        {c:10, l:'ความพึงพอใจบรรยายพิเศษ "We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR"', ic:'fi-sr-user'},
-        {c:11, l:'ความพึงพอใจกิจกรรม Workshop : We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR', ic:'fi-sr-users'},
+        {c:3, l:'นิทรรศการงานประกวดภายโครงการประกวดนวัตกรรมและสิ่งประดิษฐ์ สำหรับนักเรียนระดับมัธยมศึกษาตอนปลาย และนิทรรศการผลงานนวัตกรรมราชวิทยาลัยจุฬาภรณ์', ic:'fi-sr-presentation'}, 
+        {c:4, l:'กิจกรรมบรรยายพิเศษถึงบทบาทและยุทธศาสตร์ของราชวิทยาลัยจุฬาภรณ์ต่อการสร้างความเป็นเลิศด้านการวิจัยและนวัตกรรมเชิงสุขภาพ เพื่อส่งเสริมคุณภาพชีวิตที่ยั่งยืนของคนไทย', ic:'fi-sr-briefcase'}, 
+        {c:5, l:'ปาฐกถาพิเศษ "การวางรากฐานสู่ประเทศรายได้สูงด้วยวิทยาศาสตร์และเทคโนโลยี"', ic:'fi-sr-megaphone'}, 
+        {c:6, l:'การบรรยายพิเศษ: ปลดล็อกความคิดสร้างสรรค์ ปั้นนวัตกรรมเปลี่ยนโลก', ic:'fi-sr-bulb'},
+        {c:7, l:'บรรยายพิเศษ "AICEDA: ปั้นฝันปัญญาประดิษฐ์ทางการแพทย์ไทย สู่เวทีนวัตกรรมโลก"', ic:'fi-sr-microchip'},
+        {c:8, l:'บรรยายพิเศษ "Pitching Idea 101: ไอเดียปัง ทุนวิจัยพุ่ง! (วัยรุ่นทำได้)"', ic:'fi-sr-rocket-lunch'},
+        {c:9, l:'บรรยายพิเศษ "AI & Me: คู่หูสร้างสรรค์ผลงานยุคดิจิทัล"', ic:'fi-sr-computer'},
+        {c:10, l:'บรรยายพิเศษ "We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR"', ic:'fi-sr-chalkboard-user'},
+        {c:11, l:'กิจกรรม Workshop : We are Innovator จุดประกายนวัตกร ด้วย STEAM4INNOVATOR', ic:'fi-sr-users'},
         {c:12, l:'ภาพรวมกิจกรรมทั้งหมด', ic:'fi-sr-star'}
       ];
 
@@ -425,24 +466,24 @@
 
     function renderRankingTable(containerId, data, total) {
       const medals = [
-          '<div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-medal text-amber-500 mt-1"></i></div>', 
-          '<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-medal text-slate-400 mt-1"></i></div>', 
-          '<div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-medal text-orange-500 mt-1"></i></div>'
+          '<div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-trophy text-amber-500 mt-1"></i></div>', 
+          '<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-trophy text-slate-400 mt-1"></i></div>', 
+          '<div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mx-auto shadow-sm"><i class="fi fi-sr-trophy text-orange-500 mt-1"></i></div>'
       ];
       if(data.length === 0) { document.getElementById(containerId).innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500 font-bold">ไม่มีข้อมูล</td></tr>`; return; }
       document.getElementById(containerId).innerHTML = data.map((it, i) => {
         let p = preciseRound(it[1]*100/total, 2).toFixed(2); 
         let icon = i < 3 ? medals[i] : `<span class="font-black text-slate-400">${i+1}</span>`;
-        return `<tr class="hover:bg-indigo-50 transition-colors border-b border-slate-50"> 
+        return `<tr class="hover:bg-cyan-50 transition-colors border-b border-slate-50"> 
             <td class="p-3 text-center align-middle">${icon}</td> 
             <td class="p-3 font-bold text-slate-700">${it[0]}</td> 
-            <td class="p-3 text-right font-black text-indigo-600 text-lg">${it[1]}</td> 
+            <td class="p-3 text-right font-black text-cyan-600 text-lg">${it[1]}</td> 
             <td class="p-3 text-right text-slate-500 font-bold">${p}%</td> 
         </tr>`;
       }).join('');
     }
 
-    // ฟังก์ชันสร้างตารางสถิติทั่วไป (ใช้แทนกราฟวงกลม)
+    // ฟังก์ชันสร้างตารางสถิติทั่วไป 
     function renderDataTable(containerId, data, total) {
        if(data.length === 0) { document.getElementById(containerId).innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-500 font-bold">ไม่มีข้อมูล</td></tr>`; return; }
        document.getElementById(containerId).innerHTML = data.map((it) => {
@@ -480,7 +521,6 @@
            </div>`;
        }).join('');
 
-       // จัดการสถานะปุ่ม
        document.getElementById('lblPageNum').innerText = currentPage;
        document.getElementById('btnPrev').disabled = currentPage === 1;
        document.getElementById('btnNext').disabled = currentPage === totalPages;
