@@ -17,20 +17,36 @@
     body { font-family: 'Noto Sans Thai', sans-serif; background-color: #f1f5f9; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f8fafc; }
     
+    /* ==========================================
+       โหมดปริ้นท์ (Print Mode) ฉบับบังคับกางออก 100% 
+       ========================================== */
     @media print {
       .no-print { display: none !important; }
       .print-only { display: block !important; }
-      body { background-color: white; padding: 0; }
-      .container { max-width: 100%; width: 100%; }
-      .glass-card { box-shadow: none !important; border: 1px solid #eee !important; break-inside: avoid; margin-bottom: 20px; }
+      body { background-color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+      .glass-card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; margin-bottom: 2rem !important; padding: 1rem !important; }
+      
+      /* 🌟 ปลดล็อกกรอบ Scrollbar ให้ตารางแสดงผลครบทุกบรรทัด 🌟 */
+      .overflow-y-auto, .overflow-x-auto, .max-h-\[400px\] {
+        overflow: visible !important;
+        max-height: none !important;
+        height: auto !important;
+      }
+      
+      /* ป้องกันตารางโดนหั่นครึ่งบรรทัดเวลาข้ามหน้ากระดาษ */
+      table { page-break-inside: auto; width: 100% !important; }
+      tr { page-break-inside: avoid !important; page-break-after: auto; }
+      thead { display: table-header-group; }
     }
+    /* ========================================== */
+
     .print-only { display: none; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     .loader { border: 4px solid #f3f3f3; border-top: 4px solid #0891b2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Filter Buttons */
     .filter-btn { transition: all 0.2s; }
     .filter-btn.active-all { background-color: #f1f5f9; border-color: #cbd5e1; color: #334155; }
     .filter-btn.active-attended { background-color: #ecfdf5; border-color: #a7f3d0; color: #059669; }
@@ -195,7 +211,6 @@
       </div>
     </div>
 
-
     <hr class="my-10 border-slate-200">
     <div class="mb-6 text-xl font-bold text-slate-700 px-2 flex items-center gap-2">
         <i class="fi fi-sr-star text-amber-500"></i> สรุปข้อมูลจากแบบประเมินความพึงพอใจ
@@ -276,7 +291,10 @@
     </div>
 
     <div class="print-only">
-      <div class="glass-card p-6"><h3 class="text-xl font-bold mb-4 text-blue-600">ข้อเสนอแนะเพิ่มเติม</h3><div id="printSuggestContainer"></div></div>
+      <div class="glass-card p-6">
+        <h3 class="text-xl font-bold mb-4 text-blue-600">ข้อเสนอแนะเพิ่มเติม</h3>
+        <div id="printSuggestContainer"></div>
+      </div>
     </div>
   </div>
 
@@ -330,7 +348,7 @@
     function renderDashboard() {
       // 1. ฝั่งคนลงทะเบียน
       const totalReg = REG_DATA.length;
-      document.getElementById('actualRegCount').innerText = totalReg.toLocaleString(); // ใส่ตัวเลขในหมายเหตุฝั่งลงทะเบียน
+      document.getElementById('actualRegCount').innerText = totalReg.toLocaleString(); 
       
       renderRankedTable('sourceTableBody', getCounts(REG_DATA, 7, true), totalReg);
       renderDataTable('followTableBody', getCounts(REG_DATA, 8), totalReg);
@@ -384,7 +402,7 @@
 
       if(satTotal > 0) {
           renderSatisfaction(SAT_DATA);
-          renderRankedTable('currTableBody', getCounts(SAT_DATA, 14, true), satTotal); 
+          renderRankedTable('currTableBody', getCombinedCourseCounts(SAT_DATA), satTotal); 
           
           renderDataTable('roundTableBody', getCounts(SAT_DATA, 15), satTotal); 
           renderDataTable('futureTableBody', getCounts(SAT_DATA, 13), satTotal); 
@@ -427,6 +445,20 @@
             }
         }); 
         return Object.entries(c).sort((a,b)=>b[1]-a[1]); 
+    }
+
+    function getCombinedCourseCounts(data) {
+        let c = {};
+        data.forEach(r => {
+            let val = String(r[14] || "").trim(); 
+            if (val && val !== "-" && val !== "") {
+                let arr = val.split(/,\s*/);
+                arr.forEach(x => { 
+                    if(x && x !== "") c[x] = (c[x] || 0) + 1; 
+                });
+            }
+        });
+        return Object.entries(c).sort((a,b) => b[1] - a[1]);
     }
 
     function renderSatisfaction(data) {
